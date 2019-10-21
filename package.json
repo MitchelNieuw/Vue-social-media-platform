@@ -1,0 +1,41 @@
+{
+  "name": "social-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "bootstrap": "^4.3.1",
+    "bootswatch": "^4.3.1",
+    "jquery": "^3.4.1",
+    "laravel-echo": "^1.6.1",
+    "popper.js": "^1.16.0",
+    "pusher-js": "^5.0.2",
+    "querystring": "^0.2.0",
+    "vue": "^2.6.10",
+    "vue-class-component": "^7.0.2",
+    "vue-cookies-ts": "^1.5.19",
+    "vue-property-decorator": "^8.1.0",
+    "vue-router": "^3.0.6",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/pusher-js": "^4.2.2",
+    "@vue/cli-plugin-eslint": "^4.0.0",
+    "@vue/cli-plugin-router": "^4.0.0",
+    "@vue/cli-plugin-typescript": "^4.0.0",
+    "@vue/cli-plugin-vuex": "^4.0.0",
+    "@vue/cli-service": "^4.0.0",
+    "@vue/eslint-config-typescript": "^4.0.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0",
+    "typescript": "~3.5.3",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
