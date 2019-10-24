@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import store from '@/store/index';
 const Home = () => import('@/views/Home.vue');
 const Login = () => import('@/views/Login.vue');
 const UserProfile = () => import('@/views/UserProfile.vue');
@@ -24,12 +25,12 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.fullPath === '/user/profile' || to.fullPath === '/dashboard' || to.fullPath === '/user/notifications') {
-    if (Vue.cookies.get('isAuthenticated') === 'false') {
+    if (store.state.isAuthenticated !== 'true') {
       next('/login');
     }
   }
   if (to.fullPath === '/login' || to.fullPath === '/register') {
-    if (Vue.cookies.get('isAuthenticated') === 'true') {
+    if (store.state.isAuthenticated === 'true') {
       next('/user/profile');
     }
   }

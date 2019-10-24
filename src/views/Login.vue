@@ -7,15 +7,19 @@
                 </div>
                 <div class="card-body">
                     <form class="col-md-8 mx-auto" @submit.prevent="login()">
+                        <div class="alert alert-dismissible alert-danger mx-auto" v-if="this.$store.state.response">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <p v-text="this.$store.state.response"></p>
+                        </div>
                         <div class="form-group">
                             <label for="email">E-mail</label>
-                            <input id="email" type="email" class="form-control"
-                                   name="email" required autocomplete="email" autofocus v-model="email">
+                            <input id="email" type="email" class="form-control" name="email"
+                                   required autocomplete="email" autofocus v-model="email">
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input id="password" type="password" class="form-control"
-                                   name="password" required autocomplete="current-password" v-model="password">
+                            <input id="password" type="password" class="form-control" name="password"
+                                   required autocomplete="password" v-model="password">
                         </div>
                         <div class="form-group float-right">
                             <button type="submit" class="btn btn-primary">Login</button>
@@ -30,7 +34,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { AuthService } from '@/Services/authentication.service';
+import { authenticationService } from '@/Services/authentication.service';
 
 @Component
 export default class Login extends Vue {
@@ -38,8 +42,19 @@ export default class Login extends Vue {
     protected password: string = '';
 
     public async login() {
-        await AuthService.login(this.email, this.password);
-        await this.$router.push({ name: 'userProfile' });
+        this.$store.state.response = '';
+        await authenticationService.login(this.email, this.password);
+        if (this.$store.state.response === '') {
+            this.$store.commit('update_is_authenticated');
+            this.$store.commit('update_user');
+            await this.$store.dispatch('getMessages');
+            await this.$store.dispatch('getNotifications');
+            return this.$router.push({name: 'userProfile'});
+        }
+    }
+
+    beforeDestroy() {
+        this.$store.state.response = '';
     }
 }
 </script>

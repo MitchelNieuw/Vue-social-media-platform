@@ -12,7 +12,6 @@
     "bootstrap": "^4.3.1",
     "bootswatch": "^4.3.1",
     "jquery": "^3.4.1",
-    "laravel-echo": "^1.6.1",
     "popper.js": "^1.16.0",
     "pusher-js": "^5.0.2",
     "querystring": "^0.2.0",

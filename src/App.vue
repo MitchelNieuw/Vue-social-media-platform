@@ -15,33 +15,33 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
-                        <li v-if="!this.isAuthenticated" class="nav-item">
+                        <li v-if="!this.$store.getters.isLoggedIn" class="nav-item">
                             <router-link class="nav-link" to="/login">Login</router-link>
                         </li>
-                        <li v-if="!this.isAuthenticated" class="nav-item">
+                        <li v-if="!this.$store.getters.isLoggedIn" class="nav-item">
                             <router-link class="nav-link" to="/register">Register</router-link>
                         </li>
-                        <li v-if="this.isAuthenticated" class="nav-item dropdown">
+                        <li v-if="this.$store.getters.isLoggedIn" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="notifications" data-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="true" v-pre>
                                 Notifications <span class="caret"></span>
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="notificationsMenu" id="notificationsMenu">
-                                <li v-if="this.notifications === []"
-                                    class="dropdown-header border-bottom">
+                            <ul v-if="this.$store.state.notifications !== undefined" class="dropdown-menu"
+                                aria-labelledby="notificationsMenu" id="notificationsMenu">
+                                <li v-if="this.$store.state.notifications === []" class="dropdown-header border-bottom">
                                     No notifications yet.
                                 </li>
-                                <li v-for="(notification, index) in this.notifications" :key="index"
+                                <li v-for="(notification, index) in this.$store.state.notifications" :key="index"
                                     class="dropdown-header border-bottom">
-                                    <p class="mb-0" v-text="notification.message"></p>
-                                    <a :href="notification.link" v-text="notification.link"></a>
+                                    <p class="mb-0" v-text="notification.data.message"></p>
+                                    <a :href="notification.data.link" v-text="notification.data.link"></a>
                                 </li>
                             </ul>
                         </li>
-                        <li v-if="this.isAuthenticated" class="nav-item dropdown">
+                        <li v-if="this.$store.getters.isLoggedIn" class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                               v-text="this.user.name">
+                               v-text="this.$store.state.user.name">
                                 <span class="caret"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -63,51 +63,32 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { AuthService } from '@/Services/authentication.service';
-window.Pusher = require('pusher-js');
-import Echo from 'laravel-echo';
+import { authenticationService } from '@/Services/authentication.service';
+import { pusherService } from '@/Services/pusher.service';
 
 @Component
 export default class App extends Vue {
-    private user: any = this.$cookies.get('user');
-    protected notifications: [] = [];
-    private isAuthenticated: boolean = (this.$cookies.get('isAuthenticated') === 'true');
-
     public async logout () {
-        await AuthService.logout();
-        localStorage.removeItem('messages');
-        this.notifications = [];
-        await this.$router.push({ name: 'home' });
-    }
-
-    public addNotification(data: never) {
-        this.notifications.unshift(data);
-    }
-
-    public removeNotification(index: any) {
-        this.notifications.splice(index, 1);
+        if (this.$store.getters.isLoggedIn) {
+            await authenticationService.logout();
+            localStorage.removeItem('messages');
+            localStorage.removeItem('notifications');
+            localStorage.setItem('isAuthenticated', 'false');
+            this.$store.commit('update_is_authenticated');
+            this.$store.commit('update_user');
+            this.$store.commit('update_messages');
+            this.$store.commit('update_notifications');
+            return this.$router.push({name: 'home'});
+        }
     }
 
     created() {
-        if (this.isAuthenticated) {
-            const newEcho = new Echo({
-                broadcaster: 'pusher',
-                key: process.env.VUE_APP_PUSHER_APP_KEY,
-                cluster: 'eu',
-                forceTLS: true,
-                encrypted: true,
-                authEndpoint: 'https://localhost/broadcasting/auth',
-                auth: {
-                    headers: {
-                        Authorization: 'Bearer ' + this.user.jwtToken,
-                        Accept: 'application/json',
-                    }
-                },
-            });
-            newEcho.private(`App.User.` + this.user.id)
-                .notification((notification: any) => {
-                    console.log('first', notification);
-                    this.addNotification(notification);
+        if (this.$store.getters.isLoggedIn) {
+            let channel = pusherService.pusher(this.$store.getters.jwtToken)
+                .subscribe('private-App.User.' + this.$store.state.user.id);
+            channel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', (notification) => {
+                console.log('newNotification', notification);
+                this.$store.commit('add_notification', notification);
             });
         }
     }

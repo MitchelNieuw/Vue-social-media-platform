@@ -21,6 +21,10 @@
             UserInfo,
         },
     })
+
     export default class UserProfile extends Vue {
+        beforeDestroy() {
+            this.$store.state.response = '';
+        }
     }
 </script>

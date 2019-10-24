@@ -15,17 +15,17 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
-    import { messageService } from '@/Services/message.service';
+import { Component, Vue } from 'vue-property-decorator';
+import { messageService } from '@/Services/message.service';
 
-    @Component
-    export default class CreateMessage extends Vue {
-        protected content: string = '';
-        protected jwtToken: string = this.$cookies.get('user').jwtToken;
+@Component
+export default class CreateMessage extends Vue {
+    protected content: string = '';
 
-        public storeMessage() {
-            messageService.storeMessage(this.content, this.jwtToken);
-            this.content = '';
-        }
+    public async storeMessage() {
+        await messageService.storeMessage(this.content, this.$store.getters.jwtToken);
+        await this.$store.dispatch('getMessages');
+        this.content = '';
     }
+}
 </script>
