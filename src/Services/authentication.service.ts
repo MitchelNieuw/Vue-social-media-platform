@@ -19,7 +19,7 @@ class AuthenticationService extends Vue {
                 password: password,
             }), this.config('application/x-www-form-urlencoded')
             ).then((response) => {
-                AuthenticationService.setUserCookies(response);
+                AuthenticationService.setUserLocalStorageData(response);
             }).catch((error) => {
                 ErrorHelper.returnErrorMessage(error);
             });
@@ -28,22 +28,27 @@ class AuthenticationService extends Vue {
     public register(formData: FormData) {
         axios.post('https://localhost/api/v1/register', formData, this.config('multipart/form-data')
             ).then((response) => {
-                AuthenticationService.setUserCookies(response);
+                AuthenticationService.setUserLocalStorageData(response);
             }).catch((error) => {
                 ErrorHelper.returnErrorMessage(error);
             });
     }
 
     public logout () {
-        AuthenticationService.removeUserCookies();
+        AuthenticationService.removeUserLocalStorageData();
     }
 
-    private static removeUserCookies() {
+    private static removeUserLocalStorageData() {
         localStorage.removeItem('user');
+        localStorage.removeItem('messages');
+        localStorage.removeItem('notifications');
+        localStorage.removeItem('displayUser');
+        localStorage.removeItem('followers');
+        localStorage.removeItem('following');
         localStorage.setItem('isAuthenticated', 'false');
     }
 
-    private static setUserCookies(response: any) {
+    private static setUserLocalStorageData(response: any) {
         localStorage.setItem('user', JSON.stringify(response.data.data));
         localStorage.setItem('isAuthenticated', 'true');
     }

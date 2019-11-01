@@ -1,49 +1,75 @@
 <template>
-    <div class="">
-        <!--        <div class="alert alert-dismissible alert-danger mx-auto" v-if="this.$store.state.response">-->
-        <!--            <button type="button" class="close" data-dismiss="alert">&times;</button>-->
-        <!--            <p v-text="this.$store.state.response"></p>-->
-        <!--        </div>-->
-        <div v-if="this.$store.state.messages !== undefined">
-            <div class="" v-if="this.$store.state.response !== ''">
-                <p v-text="this.$store.state.response"></p>
-            </div>
-            <div v-for="(message, index) in this.$store.state.messages" :key="index" class="row">
-                <div class="col-md-6 mx-auto m-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="mb-0 d-inline-block" v-text="message.content"></p>
-                            <form class="d-inline-block float-right" @submit.prevent="deleteMessage(message)">
-                                <button class="close text-danger pt-0" type="submit">
-                                    <span>&times;</span>
-                                </button>
-                            </form>
-                            <div class="card-footer m-0 p-0 bg-white border-0 text-muted">
-                                <p class="mb-0" v-text="message.created_at"></p>
-                            </div>
-                        </div>
-                    </div>
+    <div class="col-md-6 pt-3">
+        <ul class="list-unstyled">
+            <li class="media bg-dark p-4 mb-3" @click.stop="toggleModal(message.id)"
+                v-for="(message, index) in this.$store.state.messages" :key="index">
+                <MessageModal :user="user()" :message="message"
+                              :show="showModal(message.id)" @close="toggleModal(message.id)"/>
+                <div class="media-body">
+                    <form class="d-inline-block float-right" @submit.prevent="deleteMessage(message, index)">
+                        <button class="close text-danger pt-0" type="submit">
+                            <span>&times;</span>
+                        </button>
+                    </form>
+                    <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"></p>
+                    <p class="mb-0" v-text="message.content"></p>
+                    <img v-if="message.image !== null" class="d-block img-fluid" v-lazy="getImageUrl(message.image)"
+                         alt="Message image">
                 </div>
-            </div>
-        </div>
+            </li>
+        </ul>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { messageService } from '@/Services/message.service';
+import { dateTimeHelper } from '@/Helpers/dateTime.helper';
+import MessageModal from '@/components/MessageModal.vue';
+import store from '@/store';
 
-@Component
+@Component({
+    components: {
+        MessageModal,
+    },
+    props: ['id'],
+    methods: {
+        getDateFromNow(date: string) {
+            return dateTimeHelper.getDateFromNow(date);
+        },
+    },
+})
 export default class UserMessages extends Vue {
-    protected response: string = '';
+    public activeModal: number = 0;
+    private jwtToken: string = this.$store.getters.jwtToken;
 
-    public async deleteMessage(message: any) {
-        await messageService.deleteMessage(message, this.$store.getters.jwtToken);
+    public user(): object {
+        return store.state.user;
+    }
+
+    public getImageUrl(image: string): string {
+        return 'https://localhost/messageImages/'+ this.$store.state.user.tag.replace('@', '') + '/' +image;
+    }
+
+    protected async deleteMessage(message: any, index: any) {
+        await messageService.deleteMessage(message, index);
         await this.$store.dispatch('getMessages');
     }
 
-    created() {
-        this.$store.dispatch('getMessages');
+    public showModal(id: number) {
+        return this.activeModal === id;
+    }
+
+    public toggleModal(id: number) {
+        if(this.activeModal !== 0) {
+            this.activeModal = 0;
+            return false;
+        }
+        this.activeModal = id;
+    }
+
+    async created() {
+        await this.toggleModal(Number(this.$props.id));
     }
 }
 </script>

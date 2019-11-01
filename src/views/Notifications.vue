@@ -1,47 +1,48 @@
 <template>
-    <div class="">
-<!--        <div class="alert alert-dismissible alert-danger mx-auto" v-if="this.$store.state.response">-->
-<!--            <button type="button" class="close" data-dismiss="alert">&times;</button>-->
-<!--            <p v-text="this.$store.state.response"></p>-->
-<!--        </div>-->
-        <div class="" v-if="this.$store.state.notifications !== []">
-            <div class="row" v-for="(notification, index) in this.$store.state.notifications" :key="index">
-                <div class="col-md-6 mx-auto">
-                    <div class="card shadow mb-3">
-                        <div class="card-body">
-                            <form class="float-right" @submit.prevent="deleteNotification(notification)">
-                                <button class="close text-danger" type="submit">
-                                    <span>&times;</span>
-                                </button>
-                            </form>
-                            <p class="d-inline-block" v-text="notification.data.message"></p>
-                            <a :href="notification.data.link"
-                               class="d-inline-block" v-text="notification.data.link"></a>
-                        </div>
-                    </div>
+    <div>
+        <p class="h4 text-center mb-4">Notifications</p>
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div v-if="this.$store.state.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <p v-text="this.$store.state.errorResponse"></p>
+                </div>
+                <div v-if="this.$store.state.response !== ''" class="mx-auto alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <p v-text="this.$store.state.response"></p>
                 </div>
             </div>
         </div>
+        <AllNotifications></AllNotifications>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { notificationService } from '@/Services/notification.service';
+import store from '@/store';
+import AllNotifications from '@/components/AllNotifications.vue';
+import app from '../main';
 
-@Component
-export default class Notifications extends Vue {
-    protected async deleteNotification(notification: any) {
-        await notificationService.deleteNotification(notification, this.$store.getters.jwtToken);
-        await this.$store.commit('remove_notification');
-    }
-
-    async beforeCreate() {
-        await this.$store.dispatch('getNotifications');
-    }
-
+@Component({
+    components: {
+        AllNotifications,
+    },
+    async beforeRouteEnter(to, from, next) {
+        await store.dispatch('getNotifications');
+        // @ts-ignore
+        app.$Progress.start();
+        next();
+    },
+    mounted() {
+        // @ts-ignore
+        app.$Progress.finish();
+    },
     beforeDestroy() {
-        this.$store.state.response = '';
-    }
+        store.commit('clear_new_notifications');
+        store.state.errorResponse = '';
+        store.state.response = '';
+    },
+})
+export default class Notifications extends Vue {
 }
 </script>

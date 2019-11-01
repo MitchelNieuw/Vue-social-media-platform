@@ -4,12 +4,10 @@ import ErrorHelper from '@/Helpers/error.helper';
 import store from "@/store";
 
 class NotificationService extends Vue {
-    private API_URL = 'https://localhost/api/v1/';
-
-    public getNotifications(token: string) {
-        axios.get(this.API_URL + 'user/notifications', {
+    public async getNotifications() {
+        await axios.get('https://localhost/api/v1/user/notifications', {
             headers: {
-                Authorization: 'Bearer ' + token,
+                Authorization: 'Bearer ' + store.getters.jwtToken,
                 Accept: 'application/json',
             },
         }).then((response) => {
@@ -19,17 +17,19 @@ class NotificationService extends Vue {
         });
     }
 
-    public deleteNotification(notification: any, token: string) {
-        axios.delete(this.API_URL + 'user/notifications/' + notification.id + '/delete', {
-                headers: {
-                    Authorization: 'Bearer ' + token,
-                    Accept: 'application/json',
-                },
-            }).then((response) => {
-                store.state.response = response.data.message;
-            }).catch((error) => {
-                ErrorHelper.returnErrorMessage(error);
-            });
+    public deleteNotification(notification: any, index: any) {
+        axios.delete('https://localhost/api/v1/user/notifications/' + notification.id + '/delete', {
+            headers: {
+                Authorization: 'Bearer ' + store.getters.jwtToken,
+                Accept: 'application/json',
+            },
+        }).then((response) => {
+            store.state.response = response.data.message;
+            store.commit('remove_notification', index);
+            store.dispatch('getNotifications');
+        }).catch((error) => {
+            ErrorHelper.returnErrorMessage(error);
+        });
     }
 }
 

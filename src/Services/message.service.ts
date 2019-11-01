@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import axios from 'axios';
 import ErrorHelper from '@/Helpers/error.helper';
-import store from "@/store";
+import store from '@/store/index';
 
 class MessageService extends Vue {
-    public getMessages(token: string): void {
-        axios.get('https://localhost/api/v1/user/messages', {
+    public async getMessages() {
+        await axios.get('https://localhost/api/v1/user/messages', {
             headers: {
-                Authorization: 'Bearer ' + token,
+                Authorization: 'Bearer ' + store.getters.jwtToken,
                 Accept: 'application/json',
             },
         }).then((response) => {
@@ -17,31 +17,28 @@ class MessageService extends Vue {
         });
     }
 
-    public storeMessage(content: string, token: string) {
-        axios.post('https://localhost/api/v1/user/messages/store', { 'content': content }, {
+    public storeMessage(formData: FormData) {
+        axios.post('https://localhost/api/v1/user/messages/store', formData, {
             headers: {
-                Authorization: 'Bearer ' + token,
+                Authorization: 'Bearer ' + store.getters.jwtToken,
                 Accept: 'application/json',
             },
         }).then((response) => {
-            store.state.response = response.data.message;
             store.commit('add_message', response.data.data);
-            store.dispatch('getMessages');
         }).catch((error) => {
             ErrorHelper.returnErrorMessage(error);
         });
     }
 
-    public deleteMessage(message: any, token: string) {
-        axios.delete('https://localhost/api/v1/message/' + message.id + '/delete', {
+    public deleteMessage(message: any, index: any) {
+        axios.delete('https://localhost/api/v1/user/messages/' + message.id + '/delete', {
             headers: {
-                Authorization: 'Bearer ' + token,
+                Authorization: 'Bearer ' + store.getters.jwtToken,
                 Accept: 'application/json',
-                'Content-type': 'application/x-www-form-urlencoded',
             },
         }).then((response) => {
             store.state.response = response.data.message;
-            store.commit('remove_message');
+            store.commit('remove_message', index);
             store.dispatch('getMessages');
         }).catch((error) => {
             ErrorHelper.returnErrorMessage(error);
