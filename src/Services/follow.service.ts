@@ -1,32 +1,27 @@
 import Vue from 'vue';
-import axios from 'axios';
-import ErrorHelper from '@/Helpers/error.helper';
+import axios, {AxiosResponse} from 'axios';
+import store from '@/store';
 
 class FollowService extends Vue {
-    public async getFollowers(token: string, tag: string) {
-        await axios.get('https://localhost/api/v1/user/' + tag + '/followers', {
-            headers: {
-                Authorization: 'Bearer ' + token,
-                Accept: 'application/json',
-            },
-        }).then((response) => {
-            localStorage.setItem('followers', JSON.stringify(response.data.followers));
-        }).catch((error) => {
-            ErrorHelper.returnErrorMessage(error);
-        });
+    private config: object = {
+        headers: {
+            Authorization: 'Bearer ' + store.getters.jwtToken,
+            Accept: 'application/json',
+        },
+    };
+
+    public async getFollowers(tag: string): Promise<AxiosResponse> {
+        return await axios.get(
+            'https://localhost/api/v1/user/' + tag + '/followers',
+            this.config
+        );
     }
 
-    public async getFollowing(token: string, tag: string) {
-        await axios.get('https://localhost/api/v1/user/' + tag + '/following', {
-            headers: {
-                Authorization: 'Bearer ' + token,
-                Accept: 'application/json',
-            },
-        }).then((response) => {
-            localStorage.setItem('following', JSON.stringify(response.data.following));
-        }).catch((error) => {
-            ErrorHelper.returnErrorMessage(error);
-        });
+    public async getFollowing(tag: string): Promise<AxiosResponse> {
+        return await axios.get(
+            'https://localhost/api/v1/user/' + tag + '/following',
+            this.config
+        );
     }
 }
 

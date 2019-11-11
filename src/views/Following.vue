@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <div v-for="(follow, index) in this.$store.state.following" :key="index">
+        <div v-for="(follow, index) in this.following" :key="index">
             <div class="row">
                 <div class="col-md-6 mx-auto mb-3">
                     <div class="card bg-dark">
@@ -28,32 +28,50 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import store from '@/store';
-import app from '../main';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {followService} from '@/Services/follow.service';
+    import ErrorHelper from '@/Helpers/error.helper';
+    import app from '../main';
+    import router from '@/router';
 
-@Component({
-    props: {
-        tag: {
-            type: String,
-            default: '',
-        },
-    },
-    async beforeRouteEnter(to, from, next) {
-        // @ts-ignore
-        app.$Progress.start();
-        await store.dispatch('getFollowing', to.params.tag);
-        next();
-    },
-    mounted() {
-        // @ts-ignore
-        app.$Progress.finish();
-    },
-})
+    @Component({
+        async beforeRouteEnter(to, from, next) {
+            // @ts-ignore
+            app.$Progress.start();
+            await followService.getFollowing(to.params.tag)
+                .then((response) => {
+                    next(vm => {
+                        // @ts-ignore
+                        vm.setFollowing(response.data.following)
+                    });
+                }).catch((error) => {
+                    console.log(ErrorHelper.returnErrorMessage(error));
+                    router.go(-1);
+                });
+            next();
+        }
+    })
 
-export default class Following extends Vue {
-    public getImageUrl(image: string): string {
-        return 'https://localhost/profilePictures/' + image;
+    export default class Following extends Vue {
+        protected following: [] = [];
+
+        @Prop({
+            required: true,
+            default: ''
+        })
+        private tag!: string;
+
+        public getImageUrl(image: string): string {
+            return 'https://localhost/profilePictures/' + image;
+        }
+
+        public setFollowing(following: []) {
+            this.following = following;
+        }
+
+        mounted() {
+            // @ts-ignore
+            app.$Progress.finish();
+        }
     }
-}
 </script>

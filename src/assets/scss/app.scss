@@ -58,3 +58,9 @@ $new-grey: #a5a5af;
   min-height: 100vh;
   position: fixed;
 }
+
+textarea {
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 2px #ffffff solid !important;
+}

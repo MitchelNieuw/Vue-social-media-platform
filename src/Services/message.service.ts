@@ -1,48 +1,35 @@
 import Vue from 'vue';
-import axios from 'axios';
-import ErrorHelper from '@/Helpers/error.helper';
+import axios, {AxiosResponse} from 'axios';
 import store from '@/store/index';
 
 class MessageService extends Vue {
-    public async getMessages() {
-        await axios.get('https://localhost/api/v1/user/messages', {
-            headers: {
-                Authorization: 'Bearer ' + store.getters.jwtToken,
-                Accept: 'application/json',
-            },
-        }).then((response) => {
-            localStorage.setItem('messages', JSON.stringify(response.data.data));
-        }).catch((error) => {
-            ErrorHelper.returnErrorMessage(error);
-        });
+    private config: object = {
+        headers: {
+            Authorization: 'Bearer ' + store.getters.jwtToken,
+            Accept: 'application/json',
+        },
+    };
+
+    public async getMessages(): Promise<AxiosResponse> {
+        return await axios.get(
+            'https://localhost/api/v1/user/messages',
+           this.config
+        );
     }
 
-    public storeMessage(formData: FormData) {
-        axios.post('https://localhost/api/v1/user/messages/store', formData, {
-            headers: {
-                Authorization: 'Bearer ' + store.getters.jwtToken,
-                Accept: 'application/json',
-            },
-        }).then((response) => {
-            store.commit('add_message', response.data.data);
-        }).catch((error) => {
-            ErrorHelper.returnErrorMessage(error);
-        });
+    public async storeMessage(formData: FormData): Promise<AxiosResponse> {
+        return await axios.post(
+            'https://localhost/api/v1/user/messages/store',
+            formData,
+            this.config
+        );
     }
 
-    public deleteMessage(message: any, index: any) {
-        axios.delete('https://localhost/api/v1/user/messages/' + message.id + '/delete', {
-            headers: {
-                Authorization: 'Bearer ' + store.getters.jwtToken,
-                Accept: 'application/json',
-            },
-        }).then((response) => {
-            store.state.response = response.data.message;
-            store.commit('remove_message', index);
-            store.dispatch('getMessages');
-        }).catch((error) => {
-            ErrorHelper.returnErrorMessage(error);
-        });
+    public async deleteMessage(message: any): Promise<AxiosResponse> {
+        return await axios.delete(
+            'https://localhost/api/v1/user/messages/' + message.id + '/delete',
+            this.config
+        );
     }
 }
 

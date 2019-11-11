@@ -5,7 +5,7 @@
                  v-lazy="getImageUrl(this.$store.state.user.profilePicture)" alt="profile picture">
             <div class="d-inline-block align-middle">
                 <p class="h4 mb-0" v-text="this.$store.state.user.name"></p>
-                <p class="h5 font-weight-normal text-primary mb-0" v-text="this.$store.state.user.tag"></p>
+                <p class="h5 font-weight-normal text-primary mb-0" v-text="'@' + this.$store.state.user.tag"></p>
             </div>
             <div class="mt-3">
                 <div v-if="this.$store.state.user.followerCount !== undefined
@@ -26,19 +26,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { dateTimeHelper } from '@/Helpers/dateTime.helper';
+    import {Component, Vue} from 'vue-property-decorator';
+    import {dateTimeHelper} from '@/Helpers/date.helper';
 
-@Component({
-    methods: {
-        filterDate(date: string) {
+    @Component
+    export default class UserInfo extends Vue {
+        public getImageUrl(image: string): string {
+            return 'https://localhost/profilePictures/' + image;
+        }
+
+        public filterDate(date: string): string {
             return dateTimeHelper.filterDate(date);
-        },
-    },
-})
-export default class UserInfo extends Vue {
-    public getImageUrl(image: string): string {
-        return 'https://localhost/profilePictures/' + image;
+        }
     }
-}
 </script>

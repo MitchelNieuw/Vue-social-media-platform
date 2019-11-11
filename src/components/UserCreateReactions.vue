@@ -1,20 +1,16 @@
 <template>
-    <div class="col-md-6 mb-5 card bg-dark border-white">
-        <div class="card-body">
-            <form @submit.prevent="storeReaction()" enctype="multipart/form-data">
-                <div class="form-group">
-                    <input type="file" ref="file" class="form-control-file" id="file" @change="handleFileUpload()">
-                </div>
-                <div class="form-group">
-                    <label for="content" class="font-weight-normal">Message</label>
-                    <textarea name="content" class="form-control bg-dark text-white border-bottom"
-                              id="content" v-model="content"></textarea>
-                </div>
-                <div class="form-group text-right">
-                    <button class="btn btn-outline-primary" type="submit">Place</button>
-                </div>
-            </form>
-        </div>
+    <div class="col-md-6 mb-5 bg-dark">
+        <form @submit.prevent="storeReaction()" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="content" class="font-weight-normal">Reaction</label>
+                <input type="file" ref="file" class="form-control-file mb-1" id="file" @change="handleFileUpload()">
+                <textarea name="content" class="form-control bg-dark text-white"
+                          id="content" v-model="content"></textarea>
+            </div>
+            <div class="form-group text-right">
+                <button class="btn btn-outline-primary" type="submit">Place</button>
+            </div>
+        </form>
     </div>
 </template>
 
@@ -23,41 +19,42 @@
 </style>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { reactionService } from '@/Services/reaction.service';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {reactionService} from '@/Services/reaction.service';
+    import ErrorHelper from '@/Helpers/error.helper';
 
-@Component({
-    props: {
-        messageId: {
-            type: Number,
-            default: 0,
-        },
-        messageIndex: {
-            required: true,
-            type: Number,
-        },
-    },
-})
-export default class UserCreateReactions extends Vue {
-    private file = '';
-    protected content: string = '';
+    @Component
+    export default class UserCreateReactions extends Vue {
+        private file = '';
+        protected content: string = '';
 
-    public handleFileUpload() {
-        // @ts-ignore
-        this.file = this.$refs.file.files[0];
-    }
+        @Prop({default: 0})
+        private messageId!: number;
 
-    public async storeReaction() {
-        let formData = new FormData();
-        if (this.file !== '') {
-            formData.append('image', this.file);
+        @Prop({required: true})
+        private messageIndex!: number;
+
+        public handleFileUpload(): void {
+            // @ts-ignore
+            this.file = this.$refs.file.files[0];
         }
-        formData.append('content', this.content);
-        await reactionService.storeReaction(formData, this.$props.messageId, this.$props.messageIndex, true);
-        this.file = '';
-        this.content = '';
-        // @ts-ignore
-        this.$refs.file.value = '';
+
+        public async storeReaction(): Promise<void> {
+            let formData = new FormData();
+            if (this.file !== '') {
+                formData.append('image', this.file);
+            }
+            formData.append('content', this.content);
+            await reactionService.storeReaction(formData, this.$props.messageId)
+                .then((response) => {
+                    this.file = '';
+                    this.content = '';
+                    // @ts-ignore
+                    this.$refs.file.value = '';
+                    this.$parent.$parent.$props.reactions.unshift(response.data.data);
+                }).catch((error) => {
+                    ErrorHelper.returnErrorMessage(error);
+                });
+        }
     }
-}
 </script>

@@ -5,20 +5,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import app from '../main';
+    import {Component, Vue} from 'vue-property-decorator';
+    import app from '../main';
 
-@Component({
-    async beforeRouteEnter(to, from, next) {
-        // @ts-ignore
-        app.$Progress.start();
-        next();
-    },
-    mounted() {
-        // @ts-ignore
-        app.$Progress.finish();
-    },
-})
-export default class Home extends Vue {
-}
+    @Component({
+        beforeRouteEnter(to, from, next) {
+            // @ts-ignore
+            app.$Progress.start();
+            next();
+        },
+    })
+    export default class Home extends Vue {
+        mounted() {
+            // @ts-ignore
+            app.$Progress.finish();
+        }
+    }
 </script>

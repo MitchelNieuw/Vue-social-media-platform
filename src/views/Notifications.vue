@@ -3,46 +3,66 @@
         <p class="h4 text-center mb-4">Notifications</p>
         <div class="row">
             <div class="col-md-6 mx-auto">
-                <div v-if="this.$store.state.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
+                <div v-if="this.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <p v-text="this.$store.state.errorResponse"></p>
-                </div>
-                <div v-if="this.$store.state.response !== ''" class="mx-auto alert alert-dismissible alert-success">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <p v-text="this.$store.state.response"></p>
+                    <p v-text="this.errorResponse"></p>
                 </div>
             </div>
         </div>
-        <AllNotifications></AllNotifications>
+        <AllNotifications :notifications="this.notifications"></AllNotifications>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import store from '@/store';
-import AllNotifications from '@/components/AllNotifications.vue';
-import app from '../main';
+    import {Component, Vue} from 'vue-property-decorator';
+    import AllNotifications from '@/components/AllNotifications.vue';
+    import {notificationService} from '@/Services/notification.service';
+    import ErrorHelper from '@/Helpers/error.helper';
+    import app from '../main';
 
-@Component({
-    components: {
-        AllNotifications,
-    },
-    async beforeRouteEnter(to, from, next) {
-        await store.dispatch('getNotifications');
-        // @ts-ignore
-        app.$Progress.start();
-        next();
-    },
-    mounted() {
-        // @ts-ignore
-        app.$Progress.finish();
-    },
-    beforeDestroy() {
-        store.commit('clear_new_notifications');
-        store.state.errorResponse = '';
-        store.state.response = '';
-    },
-})
-export default class Notifications extends Vue {
-}
+    @Component({
+        components: {
+            AllNotifications,
+        },
+        async beforeRouteEnter(to, from, next) {
+            // @ts-ignore
+            app.$Progress.start();
+            await notificationService.getNotifications()
+                .then((response) => {
+                    next(vm => {
+                        // @ts-ignore
+                        vm.setNotifications(response.data.data);
+                    });
+                }).catch((error) => {
+                    const errorMessage = ErrorHelper.returnErrorMessage(error);
+                    console.log(errorMessage);
+                    next(vm => {
+                        // @ts-ignore
+                        vm.setErrorResponse(errorMessage);
+                    });
+                });
+            next();
+        },
+    })
+    export default class Notifications extends Vue {
+        private notifications = [];
+        private errorResponse: string = '';
+
+        protected setNotifications(notifications: []) {
+            this.notifications = notifications;
+        }
+
+        protected setErrorResponse(message: string) {
+            this.errorResponse = message;
+        }
+
+        mounted() {
+            // @ts-ignore
+            app.$Progress.finish();
+        }
+
+        beforeDestroy() {
+            this.errorResponse = '';
+        }
+    }
 </script>

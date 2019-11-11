@@ -11,24 +11,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { dateTimeHelper } from '@/Helpers/dateTime.helper';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {dateTimeHelper} from '@/Helpers/date.helper';
 
-@Component({
-    props: {
-        message: {
-            type: Object,
-            default: {},
-        },
-    },
-})
-export default class DashboardMessageMediaBody extends Vue {
-    public getDateFromNow(date: string) {
-        return dateTimeHelper.getDateFromNow(date);
-    }
+    @Component
+    export default class DashboardMessageMediaBody extends Vue {
+        @Prop({default: {}})
+        private message!: object;
 
-    public getMessageImageUrl(image: string, userTag: string): string {
-        return 'https://localhost/messageImages/' + userTag + '/' + image;
+        public getDateFromNow(date: string): string {
+            return dateTimeHelper.getDateFromNow(date);
+        }
+
+        public getMessageImageUrl(image: string, userTag: string): string {
+            return 'https://localhost/messageImages/' + userTag + '/' + image;
+        }
     }
-}
 </script>

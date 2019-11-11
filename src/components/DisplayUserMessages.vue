@@ -1,8 +1,8 @@
 <template>
-    <ul class="list-unstyled" v-if="this.$store.state.displayUser.possibleBan">
+    <ul class="list-unstyled" v-if="displayUser.possibleBan">
         <li class="media bg-dark p-4 mb-3" @click.stop="toggleModal(message.id)"
-            v-for="(message, index) in this.$store.state.displayUser.messages" :key="index">
-            <MessageModal :user="user()" :message="message"
+            v-for="(message, index) in displayUser.messages" :key="index">
+            <MessageModal :user="displayUser" :message="message" :message-index="index"
                           :show="showModal(message.id)" @close="toggleModal(message.id)"/>
             <div class="media-body">
                 <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"></p>
@@ -15,47 +15,46 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { dateTimeHelper } from '@/Helpers/dateTime.helper';
-import store from '@/store';
-import MessageModal from '@/components/MessageModal.vue';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {dateTimeHelper} from '@/Helpers/date.helper';
+    import MessageModal from '@/components/MessageModal.vue';
 
-@Component({
-    components: {
-        MessageModal,
-    },
-    props: ['id'],
-    methods: {
-        getDateFromNow(date: string) {
-            return dateTimeHelper.getDateFromNow(date);
+    @Component({
+        components: {
+            MessageModal,
         },
-    },
-})
-export default class DisplayUserMessages extends Vue {
-    public activeModal: number = 0;
+    })
+    export default class DisplayUserMessages extends Vue {
+        public activeModal: number = 0;
 
-    public user(): object {
-        return store.state.displayUser;
-    }
+        @Prop({required: true})
+        private displayUser!: object;
 
-    public getImageUrl(image: string): string {
-        return 'https://localhost/messageImages/'+ this.$store.state.displayUser.tag + '/' +image;
-    }
+        @Prop({required: false})
+        private id!: number;
 
-    public showModal(id: number) {
-        return this.activeModal === id;
-    }
-
-    public toggleModal(id: number) {
-        if(this.activeModal !== 0) {
-            this.activeModal = 0;
-            return false;
+        public getImageUrl(image: string): string {
+            return 'https://localhost/messageImages/' + this.$props.displayUser.tag + '/' + image;
         }
-        this.activeModal = id;
-    }
 
-    async created() {
-        await this.toggleModal(Number(this.$props.id));
+        public getDateFromNow(date: string): string {
+            return dateTimeHelper.getDateFromNow(date);
+        }
+
+        public showModal(id: number): boolean {
+            return this.activeModal === id;
+        }
+
+        public toggleModal(id: number) {
+            if (this.activeModal !== 0) {
+                this.activeModal = 0;
+                return false;
+            }
+            this.activeModal = id;
+        }
+
+        async created() {
+            await this.toggleModal(Number(this.$props.id));
+        }
     }
-}
 </script>

@@ -34,7 +34,8 @@
                         <li v-if="this.$store.getters.isLoggedIn" class="nav-item">
                             <img class="img-small img-profile d-inline-block"
                                  v-lazy="getImageUrl(this.$store.state.user.profilePicture)" alt="Profile picture">
-                            <router-link class="nav-link d-inline-block" to="/user/profile" v-text="this.$store.state.user.name"
+                            <router-link class="nav-link d-inline-block" to="/user/profile"
+                                         v-text="this.$store.state.user.name"
                             ></router-link>
                         </li>
                         <li v-if="this.$store.getters.isLoggedIn" class="nav-item">
@@ -52,53 +53,54 @@
     </div>
 </template>
 
-<style scoped>
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity 0.25s ease-out;
+<style>
+    .fade-enter {
+        opacity: 0;
     }
-    .fade-enter, .fade-leave-to {
+
+    .fade-enter-active {
+        transition: opacity 1s;
+    }
+
+    .fade-leave-active {
+        transition: opacity 1s;
         opacity: 0;
     }
 </style>
 
+
 <script lang="ts">
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
-import { authenticationService } from '@/Services/authentication.service';
-import { pusherService } from '@/Services/pusher.service';
+    import Vue from 'vue';
+    import {Component} from 'vue-property-decorator';
+    import {authenticationService} from '@/Services/authentication.service';
+    import {pusherService} from '@/Services/pusher.service';
+    import store from '@/store';
 
-// TODO make possible to give reaction on message
-// TODO make possible to like message and a link to all liked messages
-@Component({
-    created() {
-        this.$store.commit('update_user');
-        if (this.$store.getters.isLoggedIn) {
-            pusherService.pusher(this.$store.getters.jwtToken)
-                .subscribe('private-App.User.' + this.$store.state.user.id)
-                .bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', (notification) => {
-                this.$store.commit('add_notification', notification);
-                this.$store.commit('update_new_notifications');
-            });
+    @Component({
+        async created() {
+            await store.commit('update_user');
+            if (store.getters.isLoggedIn) {
+                pusherService.pusher(store.getters.jwtToken)
+                    .subscribe('private-App.User.' + store.state.user.id)
+                    .bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', (notification) => {
+                        console.log(notification);
+                        store.commit('update_new_notifications');
+                    });
+            }
+        }
+    })
+    export default class App extends Vue {
+        public getImageUrl(image: string): string {
+            return 'https://localhost/profilePictures/' + image;
+        }
+
+        public async logout() {
+            if (store.getters.isLoggedIn) {
+                await authenticationService.logout();
+                await store.commit('update_is_authenticated');
+                await store.commit('update_user');
+                return this.$router.push({name: 'home'});
+            }
         }
     }
-})
-export default class App extends Vue {
-    public getImageUrl(image: string): string {
-        return 'https://localhost/profilePictures/' + image;
-    }
-
-    public async logout () {
-        if (this.$store.getters.isLoggedIn) {
-            await authenticationService.logout();
-            await this.$store.commit('update_is_authenticated');
-            await this.$store.commit('update_user');
-            await this.$store.commit('update_messages');
-            await this.$store.commit('update_notifications');
-            await this.$store.commit('update_display_user');
-            await this.$store.commit('update_followers');
-            await this.$store.commit('update_following');
-            return this.$router.push({ name: 'home' });
-        }
-    }
-}
 </script>

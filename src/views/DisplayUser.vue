@@ -1,61 +1,74 @@
 <template>
     <div>
         <div class="row">
-            <DisplayUserInfo></DisplayUserInfo>
+            <DisplayUserInfo :display-user="this.displayUser"></DisplayUserInfo>
             <div class="col-md-6">
-                <div v-if="this.$store.state.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
+                <div v-if="this.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <p v-text="this.$store.state.errorResponse"></p>
+                    <p v-text="this.errorResponse"></p>
                 </div>
-                <div v-if="this.$store.state.response !== ''" class="mx-auto alert alert-dismissible alert-success">
+                <div v-if="this.response !== ''" class="mx-auto alert alert-dismissible alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <p v-text="this.$store.state.response"></p>
+                    <p v-text="this.response"></p>
                 </div>
-                <DisplayUserMessages :id="this.$props.id"></DisplayUserMessages>
+                <DisplayUserMessages :id="id" :display-user="this.displayUser"></DisplayUserMessages>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import app from '../main';
-import store from '@/store';
-import DisplayUserInfo from '@/components/DisplayUserInfo.vue';
-import DisplayUserMessages from '@/components/DisplayUserMessages.vue';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import DisplayUserInfo from '@/components/DisplayUserInfo.vue';
+    import DisplayUserMessages from '@/components/DisplayUserMessages.vue';
+    import {userService} from '@/Services/user.service';
+    import app from '../main';
+    import router from '@/router';
+    import ErrorHelper from "@/Helpers/error.helper";
 
-@Component({
-    components: {
-        DisplayUserInfo,
-        DisplayUserMessages,
-    },
-    props: ['tag', 'id'],
-    async beforeRouteEnter(to, from, next) {
-        // @ts-ignore
-        app.$Progress.start();
-        await store.dispatch('displayUser', to.params.tag).then(() => {
-            if (to.fullPath === '/user/' + store.state.displayUser.tag.toLowerCase() + '/message/' + to.params.id) {
-                next({ path: '/user/profile/message/' + to.params.id, });
-            }
-            if (to.params.tag.toLowerCase() !== store.state.displayUser.tag.toLowerCase()) {
-                next({ path: '/user/profile', });
-            }
-            if (to.params.tag.toLowerCase() === store.state.displayUser.tag.toLowerCase()) {
-                store.dispatch('getFollowers', to.params.tag);
-                store.dispatch('getFollowing', to.params.tag);
-                next();
-            }
-        });
-    },
-    mounted() {
-        // @ts-ignore
-        app.$Progress.finish();
-    },
-    beforeDestroy() {
-        this.$store.state.errorResponse = '';
-        this.$store.state.response = '';
-    },
-})
-export default class DisplayUser extends Vue {
-}
+    @Component({
+        components: {
+            DisplayUserInfo,
+            DisplayUserMessages,
+        },
+        async beforeRouteEnter(to, from, next) {
+            // @ts-ignore
+            app.$Progress.start();
+            await userService.getDisplayUser(to.params.tag)
+                .then((response) => {
+                    next(vm => {
+                        //@ts-ignore
+                        vm.setDisplayUser(response.data.data);
+                    });
+                }).catch((error) => {
+                    console.log(ErrorHelper.returnErrorMessage(error));
+                    router.go(-1);
+                });
+            next();
+        },
+    })
+    export default class DisplayUser extends Vue {
+        protected response: string = '';
+        private displayUser: object = {};
+        private errorResponse: string = '';
+
+        @Prop({required: true})
+        private tag!: string;
+
+        @Prop()
+        private id!: number;
+
+        protected setDisplayUser(data: object) {
+            this.displayUser = data;
+        }
+
+        async mounted() {
+            // @ts-ignore
+            await app.$Progress.finish();
+        }
+
+        beforeDestroy() {
+            this.errorResponse = '';
+        }
+    }
 </script>

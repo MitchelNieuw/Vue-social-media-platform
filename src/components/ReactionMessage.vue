@@ -5,7 +5,7 @@
                  v-lazy="getImageUrl(reaction.user.profilePicture)" :alt="reaction.user.name">
             <div class="media-body">
                 <form v-if="userTag.toLowerCase() === reaction.user.tag.toLowerCase()"
-                      @submit.prevent="deleteReaction(messageId, reaction.id)">
+                      @submit.prevent="deleteReaction(messageId, reaction.id, index)">
                     <button class="close text-danger">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -25,41 +25,48 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { dateTimeHelper } from '@/Helpers/dateTime.helper';
-import { reactionService } from "@/Services/reaction.service";
+    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {dateTimeHelper} from '@/Helpers/date.helper';
+    import {reactionService} from '@/Services/reaction.service';
+    import store from '@/store';
+    import ErrorHelper from "@/Helpers/error.helper";
 
-@Component({
-    props: {
-        reactions: {
-            type: Array,
-            default: [],
+    @Component({
+        computed: {
+            userTag() {
+                return store.state.user.tag;
+            },
         },
-        userTag: {
-            type: String,
-            default: '',
-        },
-        messageId: {
-            required: true,
-            type: Number,
-        },
-    },
-})
-export default class ReactionMessage extends Vue {
-    public getDateFromNow(date: string) {
-        return dateTimeHelper.getDateFromNow(date);
-    }
+    })
+    export default class ReactionMessage extends Vue {
+        private response: string = '';
 
-    public getImageUrl(image: string): string {
-        return 'https://localhost/profilePictures/' + image;
-    }
+        @Prop({default: () => []})
+        private reactions!: [];
 
-    public getReactionImageUrl(image: string, userTag: string): string {
-        return 'https://localhost/reactions/' + userTag + '/' + image;
-    }
+        @Prop()
+        private messageId!: number;
 
-    public async deleteReaction(messageId: number, reactionId: number) {
-        await reactionService.deleteReaction(messageId, reactionId);
+        public getDateFromNow(date: string): string {
+            return dateTimeHelper.getDateFromNow(date);
+        }
+
+        public getImageUrl(image: string): string {
+            return 'https://localhost/profilePictures/' + image;
+        }
+
+        public getReactionImageUrl(image: string, userTag: string): string {
+            return 'https://localhost/reactions/' + userTag + '/' + image;
+        }
+
+        public async deleteReaction(messageId: number, reactionId: number, index: number): Promise<void> {
+            await reactionService.deleteReaction(messageId, reactionId)
+                .then((response) => {
+                    this.response = response.data.message;
+                    this.$props.reactions.splice(index, 1);
+                }).catch((error) => {
+                    ErrorHelper.returnErrorMessage(error);
+                });
+        }
     }
-}
 </script>

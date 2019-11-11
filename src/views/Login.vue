@@ -6,14 +6,14 @@
                     <p class="m-1 font-weight-bold">Login</p>
                 </div>
                 <div class="card-body">
-                    <div v-if="this.$store.state.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
+                    <div v-if="this.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <p v-text="this.$store.state.errorResponse"></p>
+                        <p v-text="this.errorResponse"></p>
                     </div>
                     <form class="col-md-8 mx-auto" @submit.prevent="login()">
-                        <div class="alert alert-dismissible alert-danger mx-auto" v-if="this.$store.state.response">
+                        <div class="alert alert-dismissible alert-danger mx-auto" v-if="this.response">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <p v-text="this.$store.state.response"></p>
+                            <p v-text="this.response"></p>
                         </div>
                         <div class="form-group">
                             <label for="email">E-mail</label>
@@ -36,39 +36,52 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import app from '../main';
+    import {Component, Vue} from 'vue-property-decorator';
+    import store from '@/store';
+    import {authenticationService} from '@/Services/authentication.service';
+    import ErrorHelper from '@/Helpers/error.helper';
+    import app from '../main';
 
-@Component({
-    async beforeRouteEnter(to, from, next) {
-        // @ts-ignore
-        app.$Progress.start();
-        next();
-    },
-    mounted() {
-        // @ts-ignore
-        app.$Progress.finish();
-    },
-    beforeDestroy() {
-        this.$store.state.errorResponse = '';
-    }
-})
-export default class Login extends Vue {
-    protected email: string = '';
-    protected password: string = '';
+    @Component({
+        beforeRouteEnter(to, from, next) {
+            // @ts-ignore
+            app.$Progress.finish();
+            next();
+        }
+    })
+    export default class Login extends Vue {
+        protected email: string = '';
+        protected password: string = '';
+        protected response: string = '';
+        protected errorResponse: string = '';
 
-    public async login() {
-        this.$store.state.response = '';
-        await this.$store.dispatch('login', { email: this.email, password: this.password });
-        if (this.$store.state.errorResponse === '') {
-            await this.$store.dispatch('getMessages');
-            await this.$store.dispatch('getNotifications');
-            let tag = this.$store.state.user.tag.replace('@', '');
-            await this.$store.dispatch('getFollowers', tag);
-            await this.$store.dispatch('getFollowing', tag);
-            return this.$router.push({ name: 'userProfile', });
+        public async login() {
+            this.response = '';
+            await authenticationService.login(this.email, this.password)
+                .then((response) => {
+                    Login.setUserLocalStorageData(response);
+                }).catch((error) => {
+                    this.errorResponse = ErrorHelper.returnErrorMessage(error);
+                });
+            if (this.errorResponse === '') {
+                await store.commit('update_user');
+                await store.commit('update_is_authenticated');
+                return this.$router.push({name: 'userProfile',});
+            }
+        }
+
+        private static setUserLocalStorageData(response: any) {
+            localStorage.setItem('user', JSON.stringify(response.data.data));
+            localStorage.setItem('isAuthenticated', 'true');
+        }
+
+        mounted() {
+            // @ts-ignore
+            app.$Progress.finish();
+        }
+
+        beforeDestroy() {
+            this.errorResponse = '';
         }
     }
-}
 </script>

@@ -1,18 +1,14 @@
 import Vue from 'vue';
-import axios from 'axios';
-import ErrorHelper from '@/Helpers/error.helper';
+import axios, {AxiosResponse} from 'axios';
+import store from '@/store';
 
-class DashboardService extends Vue{
-    public async getDashboardMessages(jwtToken: string) {
-        await axios.get('https://localhost/api/v1/user/dashboard',{
+class DashboardService extends Vue {
+    public async getDashboardMessages(): Promise<AxiosResponse> {
+        return axios.get('https://localhost/api/v1/user/dashboard', {
             headers: {
-                Authorization: 'Bearer ' + jwtToken,
+                Authorization: 'Bearer ' + store.getters.jwtToken,
                 Accept: 'application/json',
             },
-        }).then((response) => {
-            localStorage.setItem('dashboardMessages', JSON.stringify(response.data.data));
-        }).catch((error) => {
-            ErrorHelper.returnErrorMessage(error);
         });
     }
 }

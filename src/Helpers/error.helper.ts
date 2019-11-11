@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import store from '@/store/index';
 
 export default class ErrorHelper extends Vue {
-    public static returnErrorMessage(error: any) {
+    public static returnErrorMessage(error: any): string {
         console.log('error', error.response.data.message);
-        store.state.errorResponse = error.response.data.message;
+        return error.response.data.message;
     }
 }
