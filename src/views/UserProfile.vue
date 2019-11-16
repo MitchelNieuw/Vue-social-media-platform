@@ -27,7 +27,7 @@
     import UserMessages from '@/components/UserMessages.vue';
     import UserInfo from '@/components/UserInfo.vue';
     import app from '../main';
-    import {messageService} from '@/Services/message.service';
+    import {messageService} from '@/services/message.service';
     import ErrorHelper from '@/Helpers/error.helper';
 
     @Component({

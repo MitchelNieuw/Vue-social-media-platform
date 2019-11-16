@@ -30,7 +30,7 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import app from '../main';
-    import {followService} from '@/Services/follow.service';
+    import {followService} from '@/services/follow.service';
     import ErrorHelper from '@/Helpers/error.helper';
     import router from '@/router';
 

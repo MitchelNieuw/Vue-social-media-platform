@@ -16,7 +16,7 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import AllNotifications from '@/components/AllNotifications.vue';
-    import {notificationService} from '@/Services/notification.service';
+    import {notificationService} from '@/services/notification.service';
     import ErrorHelper from '@/Helpers/error.helper';
     import app from '../main';
 

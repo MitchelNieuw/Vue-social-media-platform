@@ -51,7 +51,7 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {userService} from '@/Services/user.service';
+    import {userService} from '@/services/user.service';
     import ErrorHelper from '@/Helpers/error.helper';
     import {dateTimeHelper} from '@/Helpers/date.helper';
 

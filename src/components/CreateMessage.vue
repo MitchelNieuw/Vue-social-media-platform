@@ -16,7 +16,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {messageService} from '@/Services/message.service';
+    import {messageService} from '@/services/message.service';
     import ErrorHelper from '@/Helpers/error.helper';
 
     @Component

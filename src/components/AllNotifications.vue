@@ -35,7 +35,7 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {notificationService} from '@/Services/notification.service';
+    import {notificationService} from '@/services/notification.service';
     import ErrorHelper from '@/Helpers/error.helper';
 
     @Component

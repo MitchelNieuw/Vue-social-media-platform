@@ -20,7 +20,7 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {reactionService} from '@/Services/reaction.service';
+    import {reactionService} from '@/services/reaction.service';
     import ErrorHelper from '@/Helpers/error.helper';
 
     @Component

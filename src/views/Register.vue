@@ -41,7 +41,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {authenticationService} from '@/Services/authentication.service';
+    import {authenticationService} from '@/services/authentication.service';
     import store from '@/store';
     import ErrorHelper from '@/Helpers/error.helper';
 

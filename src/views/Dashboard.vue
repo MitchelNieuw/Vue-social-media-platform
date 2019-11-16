@@ -5,7 +5,7 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import DashboardMessages from '@/components/DashboardMessages.vue';
-    import {dashboardService} from '@/Services/dashboard.service';
+    import {dashboardService} from '@/services/dashboard.service';
     import ErrorHelper from '@/Helpers/error.helper';
     import app from '../main';
 

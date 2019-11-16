@@ -72,8 +72,8 @@
 <script lang="ts">
     import Vue from 'vue';
     import {Component} from 'vue-property-decorator';
-    import {authenticationService} from '@/Services/authentication.service';
-    import {pusherService} from '@/Services/pusher.service';
+    import {authenticationService} from '@/services/authentication.service';
+    import {pusherService} from '@/services/pusher.service';
     import store from '@/store';
 
     @Component({

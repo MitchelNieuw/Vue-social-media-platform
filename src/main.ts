@@ -10,7 +10,7 @@ import VueProgressBar from 'vue-progressbar';
 
 Vue.config.productionTip = false;
 Vue.use(VueLazyload, {
-  attempt: 1
+  attempt: 2
 });
 
 Vue.use(VueProgressBar, {

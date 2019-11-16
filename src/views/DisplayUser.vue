@@ -21,7 +21,7 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import DisplayUserInfo from '@/components/DisplayUserInfo.vue';
     import DisplayUserMessages from '@/components/DisplayUserMessages.vue';
-    import {userService} from '@/Services/user.service';
+    import {userService} from '@/services/user.service';
     import app from '../main';
     import router from '@/router';
     import ErrorHelper from "@/Helpers/error.helper";

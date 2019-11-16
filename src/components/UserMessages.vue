@@ -23,7 +23,7 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {messageService} from '@/Services/message.service';
+    import {messageService} from '@/services/message.service';
     import {dateTimeHelper} from '@/Helpers/date.helper';
     import MessageModal from '@/components/MessageModal.vue';
     import store from '@/store';

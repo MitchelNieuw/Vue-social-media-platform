@@ -38,7 +38,7 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import store from '@/store';
-    import {authenticationService} from '@/Services/authentication.service';
+    import {authenticationService} from '@/services/authentication.service';
     import ErrorHelper from '@/Helpers/error.helper';
     import app from '../main';
 
