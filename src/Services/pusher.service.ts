@@ -8,7 +8,7 @@ class PusherService extends Vue {
             cluster: 'eu',
             forceTLS: true,
             encrypted: true,
-            authEndpoint: 'https://localhost/broadcasting/auth',
+            authEndpoint: process.env.VUE_APP_AUTH_ENDPOINT,
             auth: {
                 headers: {
                     Authorization: 'Bearer ' + jwtToken,

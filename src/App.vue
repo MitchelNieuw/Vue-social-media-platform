@@ -82,7 +82,7 @@
             if (store.getters.isLoggedIn) {
                 pusherService.pusher(store.getters.jwtToken)
                     .subscribe('private-App.User.' + store.state.user.id)
-                    .bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', (notification) => {
+                    .bind(process.env.VUE_APP_PUSHER_EVENTNAME, (notification) => {
                         console.log(notification);
                         store.commit('update_new_notifications');
                     });
