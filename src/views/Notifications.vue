@@ -20,6 +20,7 @@
     import ErrorHelper from '@/_core/helpers/error.helper';
     import app from '../main';
     import {INotification} from '@/_core/contracts/notification.contract';
+    import store from '@/store';
 
     @Component({
         components: {
@@ -63,6 +64,7 @@
         }
 
         beforeDestroy() {
+            store.commit('clear_new_notifications');
             this.errorResponse = '';
         }
     }
