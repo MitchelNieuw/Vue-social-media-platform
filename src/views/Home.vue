@@ -16,9 +16,9 @@
         },
     })
     export default class Home extends Vue {
-        mounted() {
+        async mounted() {
             // @ts-ignore
-            app.$Progress.finish();
+            await app.$Progress.finish();
         }
     }
 </script>

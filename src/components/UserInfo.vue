@@ -4,8 +4,8 @@
             <img class="img-profile mr-3"
                  v-lazy="getImageUrl(this.$store.state.user.profilePicture)" alt="profile picture">
             <div class="d-inline-block align-middle">
-                <p class="h4 mb-0" v-text="this.$store.state.user.name"></p>
-                <p class="h5 font-weight-normal text-primary mb-0" v-text="'@' + this.$store.state.user.tag"></p>
+                <p class="h4 mb-0" v-text="this.$store.state.user.name"/>
+                <p class="h5 font-weight-normal text-primary mb-0" v-text="'@' + this.$store.state.user.tag"/>
             </div>
             <div class="mt-3">
                 <div v-if="this.$store.state.user.followerCount !== undefined
@@ -19,7 +19,7 @@
                                  v-text="'Followers ' + this.$store.state.user.followerCount">
                     </router-link>
                 </div>
-                <p v-text="'Since ' + filterDate(this.$store.getters.userCreatedAt)"></p>
+                <p v-text="'Since ' + filterDate(this.$store.getters.userCreatedAt)"/>
             </div>
         </div>
     </div>
@@ -27,7 +27,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {dateTimeHelper} from '@/Helpers/date.helper';
+    import {dateTimeHelper} from '@/_core/helpers/date.helper';
 
     @Component
     export default class UserInfo extends Vue {

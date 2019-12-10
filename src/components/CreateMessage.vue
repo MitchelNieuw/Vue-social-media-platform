@@ -16,8 +16,8 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {messageService} from '@/services/message.service';
-    import ErrorHelper from '@/Helpers/error.helper';
+    import {messageService} from '@/_core/services/message.service';
+    import ErrorHelper from '@/_core/helpers/error.helper';
 
     @Component
     export default class CreateMessage extends Vue {

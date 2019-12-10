@@ -2,17 +2,17 @@
     <div class="col-md-6 pt-3">
         <ul class="list-unstyled">
             <li class="media bg-dark p-4 mb-3" v-for="(message, index) in messages"
-                :key="index" @click.stop="toggleModal(message.id)">
+                :key="index">
                 <MessageModal :user="user" :message="message" :message-index="index"
                               :show="showModal(message.id)" @close="toggleModal(message.id)"/>
-                <div class="media-body">
+                <div class="media-body" @click.stop="toggleModal(message.id)">
                     <form class="d-inline-block float-right" @submit.prevent="deleteMessage(message, index)">
                         <button class="close text-danger pt-0" type="submit">
                             <span>&times;</span>
                         </button>
                     </form>
-                    <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"></p>
-                    <p class="mb-0" v-text="message.content"></p>
+                    <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"/>
+                    <p class="mb-0" v-text="message.content"/>
                     <img v-if="message.image !== null" class="d-block img-fluid" v-lazy="getImageUrl(message.image)"
                          alt="Message image">
                 </div>
@@ -23,11 +23,12 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {messageService} from '@/services/message.service';
-    import {dateTimeHelper} from '@/Helpers/date.helper';
+    import {messageService} from '@/_core/services/message.service';
+    import {dateTimeHelper} from '@/_core/helpers/date.helper';
     import MessageModal from '@/components/MessageModal.vue';
     import store from '@/store';
-    import ErrorHelper from '@/Helpers/error.helper';
+    import ErrorHelper from '@/_core/helpers/error.helper';
+    import {IMessage} from '@/_core/contracts/message.contract';
 
     @Component({
         components: {
@@ -46,7 +47,7 @@
         private id!: number;
 
         @Prop({default: () => []})
-        private messages!: [];
+        private messages!: Array<IMessage>;
 
         public getImageUrl(image: string): string {
             return 'https://localhost/messageImages/' + this.$store.state.user.tag.replace('@', '') + '/' + image;

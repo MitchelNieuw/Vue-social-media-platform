@@ -5,7 +5,7 @@
                 <button class="float-right close text-danger pt-0" @click.stop="close()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <slot></slot>
+                <slot/>
             </div>
         </div>
     </transition>

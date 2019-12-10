@@ -3,20 +3,20 @@
         <div class="row">
             <div v-if="this.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <p v-text="this.errorResponse"></p>
+                <p v-text="this.errorResponse"/>
             </div>
             <div v-if="this.response !== ''" class="mx-auto alert alert-dismissible alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <p v-text="this.response"></p>
+                <p v-text="this.response"/>
             </div>
         </div>
         <div class="row">
-            <UserInfo></UserInfo>
-            <CreateMessage></CreateMessage>
+            <UserInfo/>
+            <CreateMessage/>
         </div>
         <div class="row">
             <div class="col-md-3"></div>
-            <UserMessages :id="id" :messages="this.messages"></UserMessages>
+            <UserMessages :id="id" :messages="this.messages"/>
         </div>
     </div>
 </template>
@@ -27,8 +27,9 @@
     import UserMessages from '@/components/UserMessages.vue';
     import UserInfo from '@/components/UserInfo.vue';
     import app from '../main';
-    import {messageService} from '@/services/message.service';
-    import ErrorHelper from '@/Helpers/error.helper';
+    import {messageService} from '@/_core/services/message.service';
+    import ErrorHelper from '@/_core/helpers/error.helper';
+    import {IMessage} from '@/_core/contracts/message.contract';
 
     @Component({
         components: {
@@ -58,7 +59,7 @@
     })
 
     export default class UserProfile extends Vue {
-        protected messages: [] = [];
+        protected messages: Array<IMessage> = [];
         private errorResponse: string = '';
         private response: string = '';
 
@@ -76,9 +77,9 @@
             this.errorResponse = message;
         }
 
-        mounted() {
+        async mounted() {
             // @ts-ignore
-            app.$Progress.finish();
+            await app.$Progress.finish();
         }
 
         beforeDestroy() {

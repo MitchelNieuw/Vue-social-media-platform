@@ -7,7 +7,7 @@
             <form class="col-md-8 mx-auto" @submit.prevent="register()" enctype="multipart/form-data">
                 <div v-if="this.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <p v-text="this.errorResponse"></p>
+                    <p v-text="this.errorResponse"/>
                 </div>
                 <div class="form-group">
                     <input type="file" class="form-control-file" ref="file" name="file" @change="handleFileUpload()">
@@ -41,9 +41,9 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {authenticationService} from '@/services/authentication.service';
+    import {authenticationService} from '@/_core/services/authentication.service';
     import store from '@/store';
-    import ErrorHelper from '@/Helpers/error.helper';
+    import ErrorHelper from '@/_core/helpers/error.helper';
 
     @Component({
         beforeRouteEnter(to, from, next) {
@@ -90,9 +90,9 @@
             localStorage.setItem('isAuthenticated', 'true');
         }
 
-        mounted() {
+        async mounted() {
             // @ts-ignore
-            app.$Progress.finish();
+            await app.$Progress.finish();
         }
 
         beforeDestroy() {

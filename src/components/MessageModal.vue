@@ -4,18 +4,16 @@
             <img v-if="user" class="align-self-start mr-3 img-medium"
                  v-lazy="getImageUrl(user.profilePicture)" :alt="user.name">
             <div class="media-body">
-                <p v-if="user" class="font-weight-bold d-inline-block mr-2 mb-0" v-text="user.name"></p>
+                <p v-if="user" class="font-weight-bold d-inline-block mr-2 mb-0" v-text="user.name"/>
                 <router-link v-if="user" class="d-inline-block mr-2"
-                             :to="'/user/' + user.tag" v-text="'@' + user.tag"></router-link>
-                <p class="text-muted d-inline-block mb-2 align-top" v-text="getDateFromNow(message.createdAt)"></p>
-                <p class="mb-4" v-text="message.content"></p>
+                             :to="'/user/' + user.tag" v-text="'@' + user.tag"/>
+                <p class="text-muted d-inline-block mb-2 align-top" v-text="getDateFromNow(message.createdAt)"/>
+                <p class="mb-4" v-text="message.content"/>
                 <img v-if="message.image !== null" class="d-block img-fluid"
                      v-lazy="getMessageImageUrl(message.image, user.tag)" alt="Message image">
 
-                <UserCreateReactions :message-id="message.id" :message-index="messageIndex"
-                ></UserCreateReactions>
-                <ReactionMessage :message-id="message.id" :reactions="message.reactions"
-                ></ReactionMessage>
+                <UserCreateReactions :message-id="message.id" :message-index="messageIndex"/>
+                <ReactionMessage :message-id="message.id" :reactions="message.reactions"/>
             </div>
         </div>
     </modal>
@@ -24,9 +22,12 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import Modal from '@/components/Modal.vue';
-    import {dateTimeHelper} from '@/Helpers/date.helper';
+    import {dateTimeHelper} from '@/_core/helpers/date.helper';
     import ReactionMessage from '@/components/ReactionMessage.vue';
     import UserCreateReactions from '@/components/UserCreateReactions.vue';
+    import {IMessage} from '@/_core/contracts/message.contract';
+    import {IUser} from '@/_core/contracts/user.contract';
+    import {IReaction} from '@/_core/contracts/reaction.contract';
 
     @Component({
         components: {
@@ -40,16 +41,16 @@
         private show!: boolean;
 
         @Prop({default: {}})
-        private message!: object;
+        private message!: IMessage;
 
         @Prop({required: true})
         private messageIndex!: number;
 
         @Prop({default: {}})
-        private user!: object;
+        private user!: IUser;
 
         @Prop({default: () => []})
-        public reactions!: [];
+        public reactions!: Array<IReaction>;
 
         public getDateFromNow(date: string): string {
             return dateTimeHelper.getDateFromNow(date);

@@ -1,17 +1,17 @@
 <template>
     <div>
         <div class="row">
-            <DisplayUserInfo :display-user="this.displayUser"></DisplayUserInfo>
+            <DisplayUserInfo :display-user="this.displayUser"/>
             <div class="col-md-6">
                 <div v-if="this.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <p v-text="this.errorResponse"></p>
+                    <p v-text="this.errorResponse"/>
                 </div>
                 <div v-if="this.response !== ''" class="mx-auto alert alert-dismissible alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <p v-text="this.response"></p>
+                    <p v-text="this.response"/>
                 </div>
-                <DisplayUserMessages :id="id" :display-user="this.displayUser"></DisplayUserMessages>
+                <DisplayUserMessages :id="id" :display-user="this.displayUser"/>
             </div>
         </div>
     </div>
@@ -21,10 +21,11 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import DisplayUserInfo from '@/components/DisplayUserInfo.vue';
     import DisplayUserMessages from '@/components/DisplayUserMessages.vue';
-    import {userService} from '@/services/user.service';
+    import {userService} from '@/_core/services/user.service';
     import app from '../main';
     import router from '@/router';
-    import ErrorHelper from "@/Helpers/error.helper";
+    import ErrorHelper from '@/_core/helpers/error.helper';
+    import {IDisplayUser} from '@/_core/contracts/display-user.contract';
 
     @Component({
         components: {
@@ -48,9 +49,9 @@
         },
     })
     export default class DisplayUser extends Vue {
-        protected response: string = '';
-        private displayUser: object = {};
-        private errorResponse: string = '';
+        public response: string = '';
+        public displayUser: object = {};
+        public errorResponse: string = '';
 
         @Prop({required: true})
         private tag!: string;
@@ -58,7 +59,7 @@
         @Prop()
         private id!: number;
 
-        protected setDisplayUser(data: object) {
+        protected setDisplayUser(data: IDisplayUser) {
             this.displayUser = data;
         }
 

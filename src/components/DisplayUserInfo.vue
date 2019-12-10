@@ -4,8 +4,8 @@
             <img class="img-profile mr-3"
                  v-lazy="getImageUrl(displayUser.profilePicture)" alt="profile picture">
             <div class="d-inline-block align-middle">
-                <p class="m-1 h5" v-text="displayUser.name"></p>
-                <p class="m-1 text-primary" v-text="'@' + displayUser.tag"></p>
+                <p class="m-1 h5" v-text="displayUser.name"/>
+                <p class="m-1 text-primary" v-text="'@' + displayUser.tag"/>
             </div>
             <div class="mt-3" v-if="displayUser.followerCount !== undefined
                                     && displayUser.followingCount !== undefined">
@@ -32,15 +32,15 @@
                     </form>
                     <form @submit.prevent="turnOnNotifications()" v-if="displayUser.possibleTurnOnNotifications"
                           class="mt-2 float-right">
-                        <button class="btn btn-outline-info mr-3"><i class="far fa-bell"></i></button>
+                        <button class="btn btn-outline-info mr-3"><i class="far fa-bell"/></button>
                     </form>
                     <form @submit.prevent="turnOffNotifications()" v-if="displayUser.possibleTurnOffNotifications"
                           class="mt-2 float-right">
-                        <button class="btn btn-info mr-3"><i class="far fa-bell-slash"></i></button>
+                        <button class="btn btn-info mr-3"><i class="far fa-bell-slash"/></button>
                     </form>
                 </div>
             </div>
-            <p class="m-0" v-text="'Since ' + filterDate(displayUser.createdAt)"></p>
+            <p class="m-0">Since {{ displayUser.createdAt | formatDate }}</p>
         </div>
     </div>
 </template>
@@ -51,23 +51,28 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {userService} from '@/services/user.service';
-    import ErrorHelper from '@/Helpers/error.helper';
-    import {dateTimeHelper} from '@/Helpers/date.helper';
+    import {userService} from '@/_core/services/user.service';
+    import ErrorHelper from '@/_core/helpers/error.helper';
+    import {dateTimeHelper} from '@/_core/helpers/date.helper';
+    import {IDisplayUser} from '@/_core/contracts/display-user.contract';
 
-    @Component
+    @Component({
+        filters: {
+            formatDate(date: string|undefined) {
+                if (date !== undefined) {
+                    return dateTimeHelper.filterDate(date);
+                }
+            }
+        }
+    })
     export default class DisplayUserInfo extends Vue {
         private response: string = '';
 
         @Prop()
-        private displayUser!: object;
+        private displayUser!: IDisplayUser|undefined;
 
         public getImageUrl(image: string): string {
             return 'https://localhost/profilePictures/' + image;
-        }
-
-        public filterDate(date: string): string {
-            return dateTimeHelper.filterDate(date);
         }
 
         public async follow(): Promise<void> {

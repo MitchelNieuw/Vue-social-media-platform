@@ -7,7 +7,7 @@
                           :show="showModal(message.id)" @close="toggleModal(message.id)"/>
             <img class="align-self-start mr-3 img-medium" v-lazy="getImageUrl(message.user.profilePicture)"
                  :alt="message.user.name">
-            <DashboardMessageMediaBody :message="message"></DashboardMessageMediaBody>
+            <DashboardMessageMediaBody :message="message"/>
         </li>
     </ul>
 </template>
@@ -17,6 +17,7 @@
     import MessageModal from '@/components/MessageModal.vue';
     import DashboardMessageMediaBody from '@/components/DashboardMessageMediaBody.vue';
     import store from '@/store';
+    import {IMessage} from '@/_core/contracts/message.contract';
 
     @Component({
         components: {
@@ -33,7 +34,7 @@
         public activeModal: number = 0;
 
         @Prop()
-        private messages!: [];
+        private messages!: Array<IMessage>;
 
         public getImageUrl(image: string): string {
             return 'https://localhost/profilePictures/' + image;

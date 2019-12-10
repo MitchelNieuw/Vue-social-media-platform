@@ -5,8 +5,8 @@
             <MessageModal :user="displayUser" :message="message" :message-index="index"
                           :show="showModal(message.id)" @close="toggleModal(message.id)"/>
             <div class="media-body">
-                <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"></p>
-                <p class="mb-0" v-text="message.content"></p>
+                <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"/>
+                <p class="mb-0" v-text="message.content"/>
                 <img v-if="message.image !== null" class="d-block img-fluid" v-lazy="getImageUrl(message.image)"
                      alt="Message image">
             </div>
@@ -16,8 +16,9 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {dateTimeHelper} from '@/Helpers/date.helper';
+    import {dateTimeHelper} from '@/_core/helpers/date.helper';
     import MessageModal from '@/components/MessageModal.vue';
+    import {IDisplayUser} from '@/_core/contracts/display-user.contract';
 
     @Component({
         components: {
@@ -28,7 +29,7 @@
         public activeModal: number = 0;
 
         @Prop({required: true})
-        private displayUser!: object;
+        private displayUser!: IDisplayUser;
 
         @Prop({required: false})
         private id!: number;

@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {pusherService} from '@/_core/services/pusher.service';
 
 Vue.use(Vuex);
 
-// TODO make able to like messages and reactions
-// TODO make view for liked messages and reactions
 const store = new Vuex.Store({
     state: {
         isAuthenticated: localStorage.getItem('isAuthenticated'),
@@ -37,6 +36,16 @@ const store = new Vuex.Store({
         },
     },
     actions: {
+        connect_to_pusher({ state, getters }) {
+            if (getters.isLoggedIn) {
+                pusherService.pusher(getters.jwtToken)
+                    .subscribe('private-App.User.' + state.user.id)
+                    .bind(process.env.VUE_APP_PUSHER_EVENTNAME, (notification) => {
+                        console.log(notification);
+                        store.commit('update_new_notifications');
+                    });
+            }
+        }
     },
     modules: {
     },

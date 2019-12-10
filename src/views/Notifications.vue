@@ -5,20 +5,21 @@
             <div class="col-md-6 mx-auto">
                 <div v-if="this.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <p v-text="this.errorResponse"></p>
+                    <p v-text="this.errorResponse"/>
                 </div>
             </div>
         </div>
-        <AllNotifications :notifications="this.notifications"></AllNotifications>
+        <AllNotifications :notifications="this.notifications"/>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import AllNotifications from '@/components/AllNotifications.vue';
-    import {notificationService} from '@/services/notification.service';
-    import ErrorHelper from '@/Helpers/error.helper';
+    import {notificationService} from '@/_core/services/notification.service';
+    import ErrorHelper from '@/_core/helpers/error.helper';
     import app from '../main';
+    import {INotification} from '@/_core/contracts/notification.contract';
 
     @Component({
         components: {
@@ -45,10 +46,10 @@
         },
     })
     export default class Notifications extends Vue {
-        private notifications = [];
-        private errorResponse: string = '';
+        public notifications: Array<INotification> = [];
+        public errorResponse: string = '';
 
-        protected setNotifications(notifications: []) {
+        protected setNotifications(notifications: Array<INotification>) {
             this.notifications = notifications;
         }
 
@@ -56,9 +57,9 @@
             this.errorResponse = message;
         }
 
-        mounted() {
+        async mounted() {
             // @ts-ignore
-            app.$Progress.finish();
+            await app.$Progress.finish();
         }
 
         beforeDestroy() {

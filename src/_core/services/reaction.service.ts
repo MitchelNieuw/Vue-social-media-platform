@@ -10,15 +10,15 @@ class ReactionService extends Vue {
         },
     };
 
-    public async storeReaction(formData: FormData, messageId: number): Promise<AxiosResponse> {
-        return await axios.post(
+    public storeReaction(formData: FormData, messageId: number): Promise<AxiosResponse> {
+        return axios.post(
             'https://localhost/api/v1/user/messages/' + messageId + '/reaction/store', formData,
             this.config
         );
     }
 
-    public async deleteReaction(messageId: number, reactionId: number): Promise<AxiosResponse> {
-        return await axios.delete(
+    public deleteReaction(messageId: number, reactionId: number): Promise<AxiosResponse> {
+        return axios.delete(
             'https://localhost/api/v1/user/messages/' + messageId + '/reaction/' + reactionId + '/delete',
             this.config
         );

@@ -8,12 +8,12 @@
                 <div class="card-body">
                     <div v-if="this.errorResponse !== ''" class="mx-auto alert alert-dismissible alert-danger">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <p v-text="this.errorResponse"></p>
+                        <p v-text="this.errorResponse"/>
                     </div>
                     <form class="col-md-8 mx-auto" @submit.prevent="login()">
                         <div class="alert alert-dismissible alert-danger mx-auto" v-if="this.response">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <p v-text="this.response"></p>
+                            <p v-text="this.response"/>
                         </div>
                         <div class="form-group">
                             <label for="email">E-mail</label>
@@ -38,8 +38,8 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import store from '@/store';
-    import {authenticationService} from '@/services/authentication.service';
-    import ErrorHelper from '@/Helpers/error.helper';
+    import {authenticationService} from '@/_core/services/authentication.service';
+    import ErrorHelper from '@/_core/helpers/error.helper';
     import app from '../main';
 
     @Component({
@@ -61,6 +61,7 @@
                 .then((response) => {
                     Login.setUserLocalStorageData(response);
                 }).catch((error) => {
+                    console.log(error.response);
                     this.errorResponse = ErrorHelper.returnErrorMessage(error);
                 });
             if (this.errorResponse === '') {
@@ -75,9 +76,9 @@
             localStorage.setItem('isAuthenticated', 'true');
         }
 
-        mounted() {
+        async mounted() {
             // @ts-ignore
-            app.$Progress.finish();
+            await app.$Progress.finish();
         }
 
         beforeDestroy() {

@@ -5,7 +5,7 @@
                 <label for="content" class="font-weight-normal">Reaction</label>
                 <input type="file" ref="file" class="form-control-file mb-1" id="file" @change="handleFileUpload()">
                 <textarea name="content" class="form-control bg-dark text-white"
-                          id="content" v-model="content"></textarea>
+                          id="content" v-model="content"/>
             </div>
             <div class="form-group text-right">
                 <button class="btn btn-outline-primary" type="submit">Place</button>
@@ -14,14 +14,14 @@
     </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" rel="stylesheet/scss">
     @import '../../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 </style>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {reactionService} from '@/services/reaction.service';
-    import ErrorHelper from '@/Helpers/error.helper';
+    import {reactionService} from '@/_core/services/reaction.service';
+    import ErrorHelper from '@/_core/helpers/error.helper';
 
     @Component
     export default class UserCreateReactions extends Vue {

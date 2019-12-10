@@ -1,13 +1,14 @@
 <template>
-    <DashboardMessages :messages="this.messages"></DashboardMessages>
+    <DashboardMessages :messages="this.messages"/>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import DashboardMessages from '@/components/DashboardMessages.vue';
-    import {dashboardService} from '@/services/dashboard.service';
-    import ErrorHelper from '@/Helpers/error.helper';
+    import {dashboardService} from '@/_core/services/dashboard.service';
+    import ErrorHelper from '@/_core/helpers/error.helper';
     import app from '../main';
+    import {IMessage} from '@/_core/contracts/message.contract';
 
     @Component({
         components: {
@@ -29,13 +30,14 @@
                         vm.setErrorResponse(errorMessage);
                     });
                 });
+            next();
         },
     })
     export default class Dashboard extends Vue {
-        protected messages: object = {};
+        protected messages: Array<IMessage> = [];
         private errorResponse: string = '';
 
-        protected setMessages(data: object) {
+        protected setMessages(data: Array<IMessage>) {
             this.messages = data;
         }
 
@@ -43,9 +45,9 @@
             this.errorResponse = message;
         }
 
-        mounted() {
+        async mounted() {
             // @ts-ignore
-            app.$Progress.finish();
+            await app.$Progress.finish();
         }
     }
 </script>

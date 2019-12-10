@@ -10,13 +10,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </form>
-                <p class="font-weight-bold d-inline-block mr-2 mb-0"
-                   v-text="reaction.user.name"></p>
+                <p class="font-weight-bold d-inline-block mr-2 mb-0" v-text="reaction.user.name"/>
                 <router-link class="d-inline-block mr-2"
-                             :to="'/user/' + reaction.user.tag" v-text="'@' + reaction.user.tag"></router-link>
-                <p class="text-muted d-inline-block mb-2 align-top"
-                   v-text="getDateFromNow(reaction.created_at)"></p>
-                <p class="mb-3" v-text="reaction.content"></p>
+                             :to="'/user/' + reaction.user.tag" v-text="'@' + reaction.user.tag"/>
+                <p class="text-muted d-inline-block mb-2 align-top" v-text="getDateFromNow(reaction.created_at)"/>
+                <p class="mb-3" v-text="reaction.content"/>
                 <img v-if="reaction.image !== null" class="d-block img-fluid mb-3"
                      v-lazy="getReactionImageUrl(reaction.image, reaction.user.tag)" alt="Reaction image">
             </div>
@@ -26,10 +24,11 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {dateTimeHelper} from '@/Helpers/date.helper';
-    import {reactionService} from '@/services/reaction.service';
+    import {dateTimeHelper} from '@/_core/helpers/date.helper';
+    import {reactionService} from '@/_core/services/reaction.service';
     import store from '@/store';
-    import ErrorHelper from "@/Helpers/error.helper";
+    import ErrorHelper from "@/_core/helpers/error.helper";
+    import {IReaction} from '@/_core/contracts/reaction.contract';
 
     @Component({
         computed: {
@@ -42,7 +41,7 @@
         private response: string = '';
 
         @Prop({default: () => []})
-        private reactions!: [];
+        private reactions!: Array<IReaction>;
 
         @Prop()
         private messageId!: number;

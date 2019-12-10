@@ -10,15 +10,15 @@ class FollowService extends Vue {
         },
     };
 
-    public async getFollowers(tag: string): Promise<AxiosResponse> {
-        return await axios.get(
+    public getFollowers(tag: string): Promise<AxiosResponse> {
+        return axios.get(
             'https://localhost/api/v1/user/' + tag + '/followers',
             this.config
         );
     }
 
-    public async getFollowing(tag: string): Promise<AxiosResponse> {
-        return await axios.get(
+    public getFollowing(tag: string): Promise<AxiosResponse> {
+        return axios.get(
             'https://localhost/api/v1/user/' + tag + '/following',
             this.config
         );

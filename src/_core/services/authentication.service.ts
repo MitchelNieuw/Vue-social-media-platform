@@ -12,8 +12,8 @@ class AuthenticationService extends Vue {
         }
     }
 
-    public async login(email: string, password: string): Promise<AxiosResponse> {
-        return await axios.post('https://localhost/api/v1/login',
+    public login(email: string, password: string): Promise<AxiosResponse> {
+        return axios.post('https://localhost/api/v1/login',
             qs.stringify({
                 email: email,
                 password: password,
@@ -22,8 +22,8 @@ class AuthenticationService extends Vue {
         );
     }
 
-    public async register(formData: FormData): Promise<AxiosResponse> {
-        return await axios.post(
+    public register(formData: FormData): Promise<AxiosResponse> {
+        return axios.post(
             'https://localhost/api/v1/register',
             formData,
             this.config('multipart/form-data')

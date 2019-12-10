@@ -10,8 +10,8 @@ class NotificationService extends Vue {
         },
     };
 
-    public async getNotifications(): Promise<AxiosResponse> {
-        return await axios.get(
+    public getNotifications(): Promise<AxiosResponse> {
+        return axios.get(
             'https://localhost/api/v1/user/notifications',
             this.config
         );

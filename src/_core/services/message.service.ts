@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import axios, {AxiosResponse} from 'axios';
-import store from '@/store/index';
+import store from '@/store';
 
 class MessageService extends Vue {
     private config: object = {
@@ -10,23 +10,23 @@ class MessageService extends Vue {
         },
     };
 
-    public async getMessages(): Promise<AxiosResponse> {
-        return await axios.get(
+    public getMessages(): Promise<AxiosResponse> {
+        return axios.get(
             'https://localhost/api/v1/user/messages',
            this.config
         );
     }
 
-    public async storeMessage(formData: FormData): Promise<AxiosResponse> {
-        return await axios.post(
+    public storeMessage(formData: FormData): Promise<AxiosResponse> {
+        return axios.post(
             'https://localhost/api/v1/user/messages/store',
             formData,
             this.config
         );
     }
 
-    public async deleteMessage(message: any): Promise<AxiosResponse> {
-        return await axios.delete(
+    public deleteMessage(message: any): Promise<AxiosResponse> {
+        return axios.delete(
             'https://localhost/api/v1/user/messages/' + message.id + '/delete',
             this.config
         );
