@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="media col-md-6" v-for="(reaction, index) in reactions" :key="index">
+        <div class="media col-md-6" v-for="(reaction, index) in this.sortedReactions" :key="index">
             <img class="align-self-start mr-3 img-medium"
-                 v-lazy="getImageUrl(reaction.user.profilePicture)" :alt="reaction.user.name">
+                 :src="'https://localhost/profilePictures/' + reaction.user.profilePicture" :alt="reaction.user.name">
             <div class="media-body">
                 <form v-if="userTag.toLowerCase() === reaction.user.tag.toLowerCase()"
                       @submit.prevent="deleteReaction(messageId, reaction.id, index)">
@@ -16,7 +16,8 @@
                 <p class="text-muted d-inline-block mb-2 align-top" v-text="getDateFromNow(reaction.created_at)"/>
                 <p class="mb-3" v-text="reaction.content"/>
                 <img v-if="reaction.image !== null" class="d-block img-fluid mb-3"
-                     v-lazy="getReactionImageUrl(reaction.image, reaction.user.tag)" alt="Reaction image">
+                     :src="'https://localhost/reactions/' + reaction.user.tag + '/' + reaction.image"
+                     alt="Reaction image">
             </div>
         </div>
     </div>
@@ -27,7 +28,7 @@
     import {dateTimeHelper} from '@/_core/helpers/date.helper';
     import {reactionService} from '@/_core/services/reaction.service';
     import store from '@/store';
-    import ErrorHelper from "@/_core/helpers/error.helper";
+    import ErrorHelper from '@/_core/helpers/error.helper';
     import {IReaction} from '@/_core/contracts/reaction.contract';
 
     @Component({
@@ -35,6 +36,12 @@
             userTag() {
                 return store.state.user.tag;
             },
+            sortedReactions() {
+                this.$props.reactions.sort((a: IReaction, b: IReaction) => {
+                    return Date.parse(b.created_at) - Date.parse(a.created_at);
+                });
+                return this.$props.reactions;
+            }
         },
     })
     export default class ReactionMessage extends Vue {
@@ -48,14 +55,6 @@
 
         public getDateFromNow(date: string): string {
             return dateTimeHelper.getDateFromNow(date);
-        }
-
-        public getImageUrl(image: string): string {
-            return 'https://localhost/profilePictures/' + image;
-        }
-
-        public getReactionImageUrl(image: string, userTag: string): string {
-            return 'https://localhost/reactions/' + userTag + '/' + image;
         }
 
         public async deleteReaction(messageId: number, reactionId: number, index: number): Promise<void> {

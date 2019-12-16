@@ -31,9 +31,10 @@
                         <li v-if="!this.$store.getters.isLoggedIn" class="nav-item">
                             <router-link class="nav-link" to="/register">Register</router-link>
                         </li>
-                        <li v-if="this.$store.getters.isLoggedIn" class="nav-item">
+                        <li v-if="this.$store.getters.isLoggedIn && this.$store.state.user !== undefined" class="nav-item">
                             <img class="img-small img-profile d-inline-block"
-                                 v-lazy="getImageUrl(this.$store.state.user.profilePicture)" alt="Profile picture">
+                                 :src="'https://localhost/profilePictures/' + this.$store.state.user.profilePicture"
+                                 alt="Profile picture">
                             <router-link class="nav-link d-inline-block" to="/user/profile"
                                          v-text="this.$store.state.user.name"/>
                         </li>
@@ -58,11 +59,11 @@
     }
 
     .fade-enter-active {
-        transition: opacity 1s;
+        transition: opacity 0.4s;
     }
 
     .fade-leave-active {
-        transition: opacity 1s;
+        transition: opacity 0.4s;
         opacity: 0;
     }
 </style>
@@ -81,13 +82,11 @@
         }
     })
     export default class App extends Vue {
-        public getImageUrl(image: string): string {
-            return 'https://localhost/profilePictures/' + image;
-        }
-
         public async logout() {
             if (store.getters.isLoggedIn) {
-                await this.$router.push({name: 'home'});
+                if (this.$router.currentRoute.name !== 'home') {
+                    await this.$router.push({name: 'home'});
+                }
                 await authenticationService.logout();
                 await store.commit('update_is_authenticated');
                 await store.commit('update_user');

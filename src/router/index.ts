@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+import VueRouter, {Route} from 'vue-router';
 import store from '@/store/index';
 
 const Home = () => import('@/views/Home.vue');
@@ -34,7 +34,7 @@ const router = new VueRouter({
     routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to: Route, from: Route, next) => {
     if (to.fullPath === '/user/profile'
         || to.fullPath === '/dashboard'
         || to.fullPath === '/user/notifications'
@@ -44,15 +44,14 @@ router.beforeEach((to, from, next) => {
             next({path: '/login'});
         }
     }
-    if (to.fullPath === '/login' || to.fullPath === '/register') {
-        if (store.getters.isLoggedIn) {
+    if (store.getters.isLoggedIn) {
+        if (to.fullPath === '/login' || to.fullPath === '/register') {
             next({path: '/user/profile'});
         }
-    }
-    if (store.getters.isLoggedIn) {
         if (to.fullPath == '/user/' + store.state.user.tag.replace('@', '')) {
             next({path: '/user/profile',});
         }
+        next();
     }
     if (to.fullPath === '/user/' + to.params.tag && to.params.tag.toLowerCase() === store.state.user.tag) {
         next({path: '/user/profile',});

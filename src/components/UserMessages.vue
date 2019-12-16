@@ -1,8 +1,8 @@
 <template>
     <div class="col-md-6 pt-3">
-        <ul class="list-unstyled">
+        <transition-group appear name="fade" tag="ul" class="list-unstyled">
             <li class="media bg-dark p-4 mb-3" v-for="(message, index) in messages"
-                :key="index">
+                :key="message.id">
                 <MessageModal :user="user" :message="message" :message-index="index"
                               :show="showModal(message.id)" @close="toggleModal(message.id)"/>
                 <div class="media-body" @click.stop="toggleModal(message.id)">
@@ -13,11 +13,12 @@
                     </form>
                     <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"/>
                     <p class="mb-0" v-text="message.content"/>
-                    <img v-if="message.image !== null" class="d-block img-fluid" v-lazy="getImageUrl(message.image)"
+                    <img v-if="message.image !== null" class="d-block img-fluid"
+                         :src="'https://localhost/messageImages/' + user.tag.replace('@', '') + '/' + message.image"
                          alt="Message image">
                 </div>
             </li>
-        </ul>
+        </transition-group>
     </div>
 </template>
 

@@ -1,17 +1,20 @@
 <template>
-    <div class="col-md-6 align-self-center">
-        <div class="align-self-center">
-            <form @submit.prevent="storeMessage()" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="content" class="font-weight-normal">Message</label>
-                    <input type="file" ref="file" class="form-control-file mb-2" id="file" @change="handleFileUpload()">
-                    <textarea name="content" class="form-control bg-dark text-white" id="content"
-                              v-model="content"></textarea>
-                </div>
-                <button class="btn btn-outline-primary float-right" type="submit">Place</button>
-            </form>
+    <transition appear name="fade" mode="out-in">
+        <div class="col-md-6 align-self-center">
+            <div class="align-self-center">
+                <form @submit.prevent="storeMessage()" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="content" class="font-weight-normal">Message</label>
+                        <input type="file" ref="file" class="form-control-file mb-2"
+                               id="file" @change="handleFileUpload()">
+                        <textarea name="content" class="form-control bg-dark text-white"
+                                  id="content" v-model="content"/>
+                    </div>
+                    <button class="btn btn-outline-primary float-right" type="submit">Place</button>
+                </form>
+            </div>
         </div>
-    </div>
+    </transition>
 </template>
 
 <script lang="ts">

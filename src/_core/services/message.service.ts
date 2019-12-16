@@ -10,10 +10,10 @@ class MessageService extends Vue {
         },
     };
 
-    public getMessages(): Promise<AxiosResponse> {
-        return axios.get(
+    public async getMessages(): Promise<AxiosResponse> {
+        return await axios.get(
             'https://localhost/api/v1/user/messages',
-           this.config
+           await this.config
         );
     }
 

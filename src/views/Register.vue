@@ -43,6 +43,7 @@
     import {Component, Vue} from 'vue-property-decorator';
     import {authenticationService} from '@/_core/services/authentication.service';
     import store from '@/store';
+    import app from '../main';
     import ErrorHelper from '@/_core/helpers/error.helper';
 
     @Component({
@@ -80,9 +81,9 @@
                 }).catch((error) => {
                     this.errorResponse = ErrorHelper.returnErrorMessage(error);
                 });
-            await store.commit('update_is_authenticated');
             await store.commit('update_user');
-            return this.$router.push({name: 'userProfile'});
+            await store.commit('update_is_authenticated');
+            return await this.$router.push({name: 'userProfile'});
         }
 
         private static setUserLocalStorageData(response: any) {

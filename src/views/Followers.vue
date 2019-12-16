@@ -7,14 +7,14 @@
                         <div class="card-body">
                             <div class="" v-if="follower.user.tag.toLowerCase() === tag.toLowerCase()">
                                 <img class="img-profile img-small mr-2"
-                                     v-lazy="getImageUrl(follower.following.profilePicture)"
+                                     :src="'https://localhost/profilePictures/' + follower.following.profilePicture"
                                      :alt="'@'+follower.following.tag">
                                 <p class="m-0 d-inline-block mr-2" v-text="follower.following.name"/>
                                 <p class="m-0 d-inline-block text-primary" v-text="'@'+follower.following.tag"/>
                             </div>
                             <div class="" v-else-if="follower.following.tag.toLowerCase() === tag.toLowerCase()">
                                 <img class="img-profile img-small mr-2"
-                                     v-lazy="getImageUrl(follower.user.profilePicture)"
+                                     :src="'https://localhost/profilePictures/' + follower.user.profilePicture"
                                      :alt="'@'+follower.user.tag">
                                 <p class="m-0 d-inline-block mr-2" v-text="follower.user.name"/>
                                 <p class="m-0 d-inline-block text-primary" v-text="'@'+follower.user.tag"/>
@@ -59,12 +59,7 @@
         @Prop({required: true, default: ''})
         private tag!: string;
 
-        public getImageUrl(image: string): string {
-            return 'https://localhost/profilePictures/' + image;
-        }
-
-        public setFollowers(followers: []) {
-            console.log(followers);
+        public setFollowers(followers: Array<IFollower>) {
             this.followers = followers;
         }
 

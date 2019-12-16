@@ -7,8 +7,8 @@
             <div class="media-body">
                 <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"/>
                 <p class="mb-0" v-text="message.content"/>
-                <img v-if="message.image !== null" class="d-block img-fluid" v-lazy="getImageUrl(message.image)"
-                     alt="Message image">
+                <img v-if="message.image !== null" class="d-block img-fluid"
+                     :src="'https://localhost/messageImages/' + message.image" alt="Message image">
             </div>
         </li>
     </ul>
@@ -33,10 +33,6 @@
 
         @Prop({required: false})
         private id!: number;
-
-        public getImageUrl(image: string): string {
-            return 'https://localhost/messageImages/' + this.$props.displayUser.tag + '/' + image;
-        }
 
         public getDateFromNow(date: string): string {
             return dateTimeHelper.getDateFromNow(date);

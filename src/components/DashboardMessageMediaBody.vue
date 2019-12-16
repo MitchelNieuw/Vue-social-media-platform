@@ -5,7 +5,7 @@
         <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"/>
         <p class="mb-0 d-block" v-text="message.content"/>
         <img v-if="message.image !== null" class="d-block img-fluid"
-             v-lazy="getMessageImageUrl(message.image, message.user.tag)" alt="Message image">
+             :src="'https://localhost/messageImages/' + message.user.tag + '/' + message.image" alt="Message image">
     </div>
 </template>
 
@@ -21,10 +21,6 @@
 
         public getDateFromNow(date: string): string {
             return dateTimeHelper.getDateFromNow(date);
-        }
-
-        public getMessageImageUrl(image: string, userTag: string): string {
-            return 'https://localhost/messageImages/' + userTag + '/' + image;
         }
     }
 </script>

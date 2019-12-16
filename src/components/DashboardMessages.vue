@@ -5,7 +5,8 @@
             <MessageModal :user-tag="userTag" :message-index="index" :user="message.user"
                           :message="message" :reactions="message.reactions"
                           :show="showModal(message.id)" @close="toggleModal(message.id)"/>
-            <img class="align-self-start mr-3 img-medium" v-lazy="getImageUrl(message.user.profilePicture)"
+            <img class="align-self-start mr-3 img-medium"
+                 :src="'https://localhost/profilePictures/' + message.user.profilePicture"
                  :alt="message.user.name">
             <DashboardMessageMediaBody :message="message"/>
         </li>
@@ -35,10 +36,6 @@
 
         @Prop()
         private messages!: Array<IMessage>;
-
-        public getImageUrl(image: string): string {
-            return 'https://localhost/profilePictures/' + image;
-        }
 
         public showModal(id: number): boolean {
             return this.activeModal === id;

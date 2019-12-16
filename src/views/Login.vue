@@ -11,10 +11,6 @@
                         <p v-text="this.errorResponse"/>
                     </div>
                     <form class="col-md-8 mx-auto" @submit.prevent="login()">
-                        <div class="alert alert-dismissible alert-danger mx-auto" v-if="this.response">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <p v-text="this.response"/>
-                        </div>
                         <div class="form-group">
                             <label for="email">E-mail</label>
                             <input id="email" type="email" class="form-control" name="email"
@@ -52,11 +48,10 @@
     export default class Login extends Vue {
         protected email: string = '';
         protected password: string = '';
-        protected response: string = '';
         protected errorResponse: string = '';
 
         public async login() {
-            this.response = '';
+            this.errorResponse = '';
             await authenticationService.login(this.email, this.password)
                 .then((response) => {
                     Login.setUserLocalStorageData(response);
@@ -67,7 +62,7 @@
             if (this.errorResponse === '') {
                 await store.commit('update_user');
                 await store.commit('update_is_authenticated');
-                return this.$router.push({name: 'userProfile',});
+                return await this.$router.push({name: 'userProfile'});
             }
         }
 

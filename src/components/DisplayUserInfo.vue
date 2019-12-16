@@ -1,8 +1,7 @@
 <template>
     <div class="col-md-3">
         <div v-if="displayUser !== undefined">
-            <img class="img-profile mr-3"
-                 v-lazy="getImageUrl(displayUser.profilePicture)" alt="profile picture">
+            <img :src="'https://localhost/profilePictures/' + displayUser.profilePicture" alt="profile picture" class="img-profile mr-3">
             <div class="d-inline-block align-middle">
                 <p class="m-1 h5" v-text="displayUser.name"/>
                 <p class="m-1 text-primary" v-text="'@' + displayUser.tag"/>
@@ -66,14 +65,10 @@
         }
     })
     export default class DisplayUserInfo extends Vue {
-        private response: string = '';
+        public response: string = '';
 
         @Prop()
         private displayUser!: IDisplayUser|undefined;
-
-        public getImageUrl(image: string): string {
-            return 'https://localhost/profilePictures/' + image;
-        }
 
         public async follow(): Promise<void> {
             await userService.follow(this.$props.displayUser.tag)

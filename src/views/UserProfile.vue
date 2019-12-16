@@ -37,23 +37,9 @@
             UserMessages,
             UserInfo,
         },
-        async beforeRouteEnter(to, from, next) {
+        beforeRouteEnter(to, from, next) {
             // @ts-ignore
             app.$Progress.start();
-            await messageService.getMessages()
-                .then((response) => {
-                    next(vm => {
-                        // @ts-ignore
-                        vm.setMessages(response.data.data);
-                    });
-                }).catch((error) => {
-                    const errorMessage = ErrorHelper.returnErrorMessage(error);
-                    console.log(errorMessage);
-                    next(vm => {
-                        // @ts-ignore
-                        vm.setErrorResponse(errorMessage);
-                    });
-                });
             next();
         },
     })
@@ -69,12 +55,23 @@
         @Prop()
         private id!: number;
 
-        public setMessages(messages: []) {
+        public setMessages(messages: Array<IMessage>) {
             this.messages = messages;
         }
 
         public setErrorResponse(message: string) {
             this.errorResponse = message;
+        }
+
+        async created() {
+            await messageService.getMessages()
+                .then((response) => {
+                    this.setMessages(response.data.data);
+                }).catch((error) => {
+                    const errorMessage = ErrorHelper.returnErrorMessage(error);
+                    console.log(errorMessage);
+                    this.setErrorResponse(errorMessage);
+                });
         }
 
         async mounted() {
