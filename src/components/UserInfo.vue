@@ -3,7 +3,7 @@
         <div class="col-md-3">
             <div v-if="this.$store.getters.isLoggedIn && this.$store.state.user !== undefined">
                 <img class="img-profile mr-3"
-                     :src="'https://localhost/profilePictures/' + this.$store.state.user.profilePicture"
+                     :src="'http://127.0.0.1:8000/' + this.$store.state.user.profilePicture"
                      :alt="this.$store.state.user.name">
                 <div class="d-inline-block align-middle">
                     <p class="h4 mb-0" v-text="this.$store.state.user.name"/>

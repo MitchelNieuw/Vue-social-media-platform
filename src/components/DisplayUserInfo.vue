@@ -1,7 +1,7 @@
 <template>
     <div class="col-md-3">
         <div v-if="displayUser !== undefined">
-            <img :src="'https://localhost/profilePictures/' + displayUser.profilePicture" alt="profile picture" class="img-profile mr-3">
+            <img :src="'http://127.0.0.1:8000/' + displayUser.profilePicture" alt="profile picture" class="img-profile mr-3">
             <div class="d-inline-block align-middle">
                 <p class="m-1 h5" v-text="displayUser.name"/>
                 <p class="m-1 text-primary" v-text="'@' + displayUser.tag"/>

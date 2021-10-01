@@ -16,7 +16,7 @@
             <transition-group v-if="users.length > 0 && search" appear name="fade" tag="ul" class="list-group">
                 <li class="list-group-item bg-dark" v-for="user in users.slice(0,10)" :key="user.id">
                     <router-link :to="'/user/' + user.tag">
-                        <img :src="'https://localhost/profilePictures/' + user.profilePicture" :alt="user.name"
+                        <img :src="'http://127.0.0.1:8000/' + user.profilePicture" :alt="user.name"
                              class="img-small d-inline-block mr-2">
                         <p v-text="user.name" class="text-white d-inline-block mr-2" />
                         <p v-text="'@' + user.tag" class="d-inline-block" />

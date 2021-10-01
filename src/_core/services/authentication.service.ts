@@ -13,7 +13,7 @@ class AuthenticationService extends Vue {
     }
 
     public login(email: string, password: string): Promise<AxiosResponse> {
-        return axios.post('https://localhost/api/v1/login',
+        return axios.post('http://127.0.0.1:8000/api/v1/login',
             qs.stringify({
                 email: email,
                 password: password,
@@ -24,7 +24,7 @@ class AuthenticationService extends Vue {
 
     public register(formData: FormData): Promise<AxiosResponse> {
         return axios.post(
-            'https://localhost/api/v1/register',
+            'http://127.0.0.1:8000/api/v1/register',
             formData,
             this.config('multipart/form-data')
         );

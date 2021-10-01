@@ -6,7 +6,7 @@
                           :message="message" :reactions="message.reactions"
                           :show="showModal(message.id)" @close="toggleModal(message.id)"/>
             <img class="align-self-start mr-3 img-medium"
-                 :src="'https://localhost/profilePictures/' + message.user.profilePicture"
+                 :src="'http://127.0.0.1:8000/' + message.user.profilePicture"
                  :alt="message.user.name">
             <DashboardMessageMediaBody :message="message"/>
         </li>

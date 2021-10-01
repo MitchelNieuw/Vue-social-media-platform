@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import axios, {AxiosResponse} from 'axios';
-import store from "@/store";
+import store from '@/store';
 
 class NotificationService extends Vue {
     private config: object = {
@@ -12,14 +12,14 @@ class NotificationService extends Vue {
 
     public getNotifications(): Promise<AxiosResponse> {
         return axios.get(
-            'https://localhost/api/v1/user/notifications',
+            'http://127.0.0.1:8000/api/v1/user/notifications',
             this.config
         );
     }
 
     public deleteNotification(notification: any): Promise<AxiosResponse> {
         return axios.delete(
-            'https://localhost/api/v1/user/notifications/' + notification.id + '/delete',
+            'http://127.0.0.1:8000/api/v1/user/notifications/' + notification.id + '/delete',
             this.config
         );
     }
