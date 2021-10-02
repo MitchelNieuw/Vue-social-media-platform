@@ -33,7 +33,7 @@
                         </li>
                         <li v-if="this.$store.getters.isLoggedIn && this.$store.state.user !== undefined" class="nav-item">
                             <img class="img-small img-profile d-inline-block"
-                                 :src="'http://127.0.0.1:8000/' + this.$store.state.user.profilePicture"
+                                 :src="url + this.$store.state.user.profilePicture"
                                  alt="Profile picture">
                             <router-link class="nav-link d-inline-block" to="/user/profile"
                                          v-text="this.$store.state.user.name"/>
@@ -82,14 +82,20 @@
         }
     })
     export default class App extends Vue {
-        public async logout() {
+		protected url: string = process.env.VUE_APP_API_URL;
+
+        public logout() {
             if (store.getters.isLoggedIn) {
                 if (this.$router.currentRoute.name !== 'home') {
-                    await this.$router.push({name: 'home'});
+					this.$router.push({name: 'home'});
                 }
-                await authenticationService.logout();
-                await store.commit('update_is_authenticated');
-                await store.commit('update_user');
+				authenticationService.logout()
+					.then((response) => {
+						localStorage.removeItem('user');
+						localStorage.setItem('isAuthenticated', 'false');
+					}).catch((error) => {
+						console.log(error.response);
+				});
             }
         }
     }

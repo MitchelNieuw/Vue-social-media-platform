@@ -7,14 +7,14 @@
                         <div class="card-body">
                             <div class="" v-if="follower.user.tag.toLowerCase() === tag.toLowerCase()">
                                 <img class="img-profile img-small mr-2"
-                                     :src="'http://127.0.0.1:8000/' + follower.following.profilePicture"
+                                     :src="process.env.VUE_APP_API_URL + follower.following.profilePicture"
                                      :alt="'@'+follower.following.tag">
                                 <p class="m-0 d-inline-block mr-2" v-text="follower.following.name"/>
                                 <p class="m-0 d-inline-block text-primary" v-text="'@'+follower.following.tag"/>
                             </div>
                             <div class="" v-else-if="follower.following.tag.toLowerCase() === tag.toLowerCase()">
                                 <img class="img-profile img-small mr-2"
-                                     :src="'http://127.0.0.1:8000/' + follower.user.profilePicture"
+                                     :src="process.env.VUE_APP_API_URL + follower.user.profilePicture"
                                      :alt="'@'+follower.user.tag">
                                 <p class="m-0 d-inline-block mr-2" v-text="follower.user.name"/>
                                 <p class="m-0 d-inline-block text-primary" v-text="'@'+follower.user.tag"/>

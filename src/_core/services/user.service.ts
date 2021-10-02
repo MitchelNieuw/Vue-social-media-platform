@@ -11,28 +11,28 @@ class UserService extends Vue {
     };
 
     public getDisplayUser(tag: string): Promise<AxiosResponse> {
-        return axios.get('http://127.0.0.1:8000/api/v1/user/' + tag, this._config);
+        return axios.get(process.env.VUE_APP_API_URL + 'api/v1/user/' + tag, this._config);
     }
 
     public follow(tag: string): Promise<AxiosResponse> {
-        return axios.patch('http://127.0.0.1:8000/api/v1/user/' + tag + '/follow', {}, this._config);
+        return axios.patch(process.env.VUE_APP_API_URL + 'api/v1/user/' + tag + '/follow', {}, this._config);
     }
 
     public unFollow(tag: string): Promise<AxiosResponse> {
-        return axios.patch('http://127.0.0.1:8000/api/v1/user/' + tag + '/unfollow', {}, this._config);
+        return axios.patch(process.env.VUE_APP_API_URL + 'api/v1/user/' + tag + '/unfollow', {}, this._config);
     }
 
     public ban(tag: string): Promise<AxiosResponse> {
-        return axios.patch('http://127.0.0.1:8000/api/v1/user/' + tag + '/ban', {}, this._config);
+        return axios.patch(process.env.VUE_APP_API_URL + 'api/v1/user/' + tag + '/ban', {}, this._config);
     }
 
     public unBan(tag: string): Promise<AxiosResponse> {
-        return axios.patch('http://127.0.0.1:8000/api/v1/user/' + tag + '/unban', {}, this._config);
+        return axios.patch(process.env.VUE_APP_API_URL + 'api/v1/user/' + tag + '/unban', {}, this._config);
     }
 
     public async turnOnNotifications(tag: string): Promise<AxiosResponse> {
         return await axios.patch(
-            'http://127.0.0.1:8000/api/v1/user/' + tag + '/notifications-on',
+            process.env.VUE_APP_API_URL + 'api/v1/user/' + tag + '/notifications-on',
             {},
             this._config
         );
@@ -40,7 +40,7 @@ class UserService extends Vue {
 
     public turnOffNotifications(tag: string): Promise<AxiosResponse> {
         return axios.patch(
-            'http://127.0.0.1:8000/api/v1/user/' + tag + '/notifications-off',
+            process.env.VUE_APP_API_URL + 'api/v1/user/' + tag + '/notifications-off',
             {},
             this._config
         );

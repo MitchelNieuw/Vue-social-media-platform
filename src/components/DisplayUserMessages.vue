@@ -8,7 +8,7 @@
                 <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"/>
                 <p class="mb-0" v-text="message.content"/>
                 <img v-if="message.image !== null" class="d-block img-fluid"
-                     :src="'https://localhost/messageImages/' + message.image" alt="Message image">
+                     :src="url + 'messageImages/' + message.image" alt="Message image">
             </div>
         </li>
     </ul>
@@ -27,6 +27,7 @@
     })
     export default class DisplayUserMessages extends Vue {
         public activeModal: number = 0;
+		protected url: string = process.env.VUE_APP_API_URL;
 
         @Prop({required: true})
         private displayUser!: IDisplayUser;
@@ -50,8 +51,8 @@
             this.activeModal = id;
         }
 
-        async created() {
-            await this.toggleModal(Number(this.$props.id));
+		created() {
+			this.toggleModal(Number(this.$props.id));
         }
     }
 </script>

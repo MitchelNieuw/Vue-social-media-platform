@@ -2,7 +2,7 @@
     <div>
         <div class="media col-md-6" v-for="(reaction, index) in this.sortedReactions" :key="index">
             <img class="align-self-start mr-3 img-medium"
-                 :src="'http://127.0.0.1:8000/' + reaction.user.profilePicture" :alt="reaction.user.name">
+                 :src="url + reaction.user.profilePicture" :alt="reaction.user.name">
             <div class="media-body">
                 <form v-if="userTag.toLowerCase() === reaction.user.tag.toLowerCase()"
                       @submit.prevent="deleteReaction(messageId, reaction.id, index)">
@@ -16,7 +16,7 @@
                 <p class="text-muted d-inline-block mb-2 align-top" v-text="getDateFromNow(reaction.created_at)"/>
                 <p class="mb-3" v-text="reaction.content"/>
                 <img v-if="reaction.image !== null" class="d-block img-fluid mb-3"
-                     :src="'http://127.0.0.1:8000/reactions/' + reaction.user.tag + '/' + reaction.image"
+                     :src="url + 'reactions/' + reaction.user.tag + '/' + reaction.image"
                      alt="Reaction image">
             </div>
         </div>
@@ -46,6 +46,7 @@
     })
     export default class ReactionMessage extends Vue {
         private response: string = '';
+		protected url: string = process.env.VUE_APP_API_URL;
 
         @Prop({default: () => []})
         private reactions!: Array<IReaction>;

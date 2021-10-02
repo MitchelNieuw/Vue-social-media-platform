@@ -12,14 +12,14 @@ class NotificationService extends Vue {
 
     public getNotifications(): Promise<AxiosResponse> {
         return axios.get(
-            'http://127.0.0.1:8000/api/v1/user/notifications',
+            process.env.VUE_APP_API_URL + 'api/v1/user/notifications',
             this.config
         );
     }
 
     public deleteNotification(notification: any): Promise<AxiosResponse> {
         return axios.delete(
-            'http://127.0.0.1:8000/api/v1/user/notifications/' + notification.id + '/delete',
+            process.env.VUE_APP_API_URL + 'api/v1/user/notifications/' + notification.id + '/delete',
             this.config
         );
     }

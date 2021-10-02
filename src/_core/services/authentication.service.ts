@@ -2,6 +2,7 @@ import Vue from 'vue';
 import axios, {AxiosResponse} from 'axios';
 // @ts-ignore
 import qs from 'querystring';
+import store from '@/store';
 
 class AuthenticationService extends Vue {
     private config(contentType: string): object {
@@ -13,7 +14,8 @@ class AuthenticationService extends Vue {
     }
 
     public login(email: string, password: string): Promise<AxiosResponse> {
-        return axios.post('http://127.0.0.1:8000/api/v1/login',
+        return axios.post(
+            process.env.VUE_APP_API_URL + 'api/v1/login',
             qs.stringify({
                 email: email,
                 password: password,
@@ -24,15 +26,23 @@ class AuthenticationService extends Vue {
 
     public register(formData: FormData): Promise<AxiosResponse> {
         return axios.post(
-            'http://127.0.0.1:8000/api/v1/register',
+            process.env.VUE_APP_API_URL + 'api/v1/register',
             formData,
             this.config('multipart/form-data')
         );
     }
 
     public logout() {
-        localStorage.removeItem('user');
-        localStorage.setItem('isAuthenticated', 'false');
+        return axios.post(
+            process.env.VUE_APP_API_URL + 'api/v1/logout',
+            null,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + store.getters.jwtToken,
+                    Accept: 'application/json',
+                }
+            }
+        );
     }
 }
 

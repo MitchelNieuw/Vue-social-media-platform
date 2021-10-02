@@ -6,7 +6,7 @@
                           :message="message" :reactions="message.reactions"
                           :show="showModal(message.id)" @close="toggleModal(message.id)"/>
             <img class="align-self-start mr-3 img-medium"
-                 :src="'http://127.0.0.1:8000/' + message.user.profilePicture"
+                 :src="url + message.user.profilePicture"
                  :alt="message.user.name">
             <DashboardMessageMediaBody :message="message"/>
         </li>
@@ -33,6 +33,7 @@
     })
     export default class DashboardMessages extends Vue {
         public activeModal: number = 0;
+		protected url: string = process.env.VUE_APP_API_URL;
 
         @Prop()
         private messages!: Array<IMessage>;

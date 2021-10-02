@@ -8,7 +8,7 @@
                           id="content" v-model="content"/>
             </div>
             <div class="form-group text-right">
-                <button class="btn btn-outline-primary" type="submit">Place</button>
+                <button class="btn btn-outline-primary" type="submit">Post</button>
             </div>
         </form>
     </div>

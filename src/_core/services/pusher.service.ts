@@ -10,6 +10,7 @@ class PusherService extends Vue {
             encrypted: true,
             authEndpoint: process.env.VUE_APP_AUTH_ENDPOINT,
             auth: {
+                params: {},
                 headers: {
                     Authorization: 'Bearer ' + jwtToken,
                     Accept: 'application/json',

@@ -4,7 +4,8 @@ import store from '@/store';
 
 class DashboardService extends Vue {
     public getDashboardMessages(): Promise<AxiosResponse> {
-        return axios.get('http://127.0.0.1:8000/api/v1/user/dashboard', {
+        return axios.get(
+            process.env.VUE_APP_API_URL + 'api/v1/user/dashboard', {
             headers: {
                 Authorization: 'Bearer ' + store.getters.jwtToken,
                 Accept: 'application/json',

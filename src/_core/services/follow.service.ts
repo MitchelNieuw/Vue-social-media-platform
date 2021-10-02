@@ -12,14 +12,14 @@ class FollowService extends Vue {
 
     public getFollowers(tag: string): Promise<AxiosResponse> {
         return axios.get(
-            'http://127.0.0.1:8000/api/v1/user/' + tag + '/followers',
+            process.env.VUE_APP_API_URL + 'api/v1/user/' + tag + '/followers',
             this.config
         );
     }
 
     public getFollowing(tag: string): Promise<AxiosResponse> {
         return axios.get(
-            'http://127.0.0.1:8000/api/v1/user/' + tag + '/following',
+            process.env.VUE_APP_API_URL + 'api/v1/user/' + tag + '/following',
             this.config
         );
     }

@@ -13,9 +13,7 @@
                     </form>
                     <p class="text-muted d-inline-block mb-0 align-top" v-text="getDateFromNow(message.createdAt)"/>
                     <p class="mb-0" v-text="message.content"/>
-                    <img v-if="message.image !== null" class="d-block img-fluid"
-                         :src="'https://localhost/messageImages/' + user.tag.replace('@', '') + '/' + message.image"
-                         alt="Message image">
+                    <img v-if="message.image !== null" class="d-block img-fluid" :src="getImageUrl(user, message)" alt="Message image">
                 </div>
             </li>
         </transition-group>
@@ -30,6 +28,7 @@
     import store from '@/store';
     import ErrorHelper from '@/_core/helpers/error.helper';
     import {IMessage} from '@/_core/contracts/message.contract';
+	import {IUser} from "@/_core/contracts/user.contract";
 
     @Component({
         components: {
@@ -43,6 +42,7 @@
     })
     export default class UserMessages extends Vue {
         public activeModal: number = 0;
+		protected url: string = process.env.VUE_APP_API_URL;
 
         @Prop()
         private id!: number;
@@ -50,8 +50,8 @@
         @Prop({default: () => []})
         private messages!: Array<IMessage>;
 
-        public getImageUrl(image: string): string {
-            return 'https://localhost/messageImages/' + this.$store.state.user.tag.replace('@', '') + '/' + image;
+        public getImageUrl(user: IUser, message: IMessage): string {
+            return this.url + 'messageImages/' + user.tag.replace('@', '') + '/' + message.image;
         }
 
         protected async deleteMessage(message: any, index: any): Promise<void> {
@@ -80,8 +80,8 @@
             this.activeModal = id;
         }
 
-        async created() {
-            await this.toggleModal(Number(this.$props.id));
+		created() {
+			this.toggleModal(Number(this.$props.id));
         }
     }
 </script>

@@ -12,14 +12,14 @@ class ReactionService extends Vue {
 
     public storeReaction(formData: FormData, messageId: number): Promise<AxiosResponse> {
         return axios.post(
-            'http://127.0.0.1:8000/api/v1/user/messages/' + messageId + '/reaction/store', formData,
+            process.env.VUE_APP_API_URL + 'api/v1/user/messages/' + messageId + '/reaction/store', formData,
             this.config
         );
     }
 
     public deleteReaction(messageId: number, reactionId: number): Promise<AxiosResponse> {
         return axios.delete(
-            'http://127.0.0.1:8000/api/v1/user/messages/' + messageId + '/reaction/' + reactionId + '/delete',
+            process.env.VUE_APP_API_URL + 'api/v1/user/messages/' + messageId + '/reaction/' + reactionId + '/delete',
             this.config
         );
     }

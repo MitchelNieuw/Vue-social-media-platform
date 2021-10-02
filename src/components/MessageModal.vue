@@ -2,7 +2,7 @@
     <modal :show="show" @close="close()">
         <div class="media">
             <img v-if="user" class="align-self-start mr-3 img-medium"
-                 :src="'http://127.0.0.1:8000/' + user.profilePicture" :alt="user.name">
+                 :src="url + user.profilePicture" :alt="user.name">
             <div class="media-body">
                 <p v-if="user" class="font-weight-bold d-inline-block mr-2 mb-0" v-text="user.name"/>
                 <router-link v-if="user" class="d-inline-block mr-2"
@@ -10,7 +10,7 @@
                 <p class="text-muted d-inline-block mb-2 align-top" v-text="getDateFromNow(message.createdAt)"/>
                 <p class="mb-4" v-text="message.content"/>
                 <img v-if="message.image !== null" class="d-block img-fluid"
-                     :src="'http://127.0.0.1:8000/messageImages/' + user.tag + '/' + message.image"
+                     :src="url + 'messageImages/' + user.tag + '/' + message.image"
                      alt="Message image">
 
                 <UserCreateReactions :message-id="message.id" :message-index="messageIndex"/>
@@ -38,6 +38,8 @@
         },
     })
     export default class MessageModal extends Vue {
+		protected url: string = process.env.VUE_APP_API_URL;
+
         @Prop({default: false})
         private show!: boolean;
 

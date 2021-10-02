@@ -40,16 +40,13 @@ const store = new Vuex.Store({
             if (getters.isLoggedIn) {
                 pusherService.pusher(getters.jwtToken)
                     .subscribe('private-App.User.' + state.user.id)
-                    .bind('App\\Notifications\\UserNewMessageNotification', (notification) => {
-                        console.log(notification);
+                    .bind('App\\Notifications\\UserNewMessageNotification', (notification: any) => {
                         store.commit('update_new_notifications');
                     })
-                    .bind('App\\Notifications\\UserReactionNotification', (notification) => {
-                        console.log(notification);
+                    .bind('App\\Notifications\\UserReactionNotification', (notification: any) => {
                         store.commit('update_new_notifications');
                     })
-                    .bind('App\\Notifications\\UserTaggedInMessage', (notification) => {
-                        console.log(notification);
+                    .bind('App\\Notifications\\UserTaggedInMessage', (notification: any) => {
                         store.commit('update_new_notifications');
                     });
             }

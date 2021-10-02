@@ -10,7 +10,7 @@
                         <textarea name="content" class="form-control bg-dark text-white"
                                   id="content" v-model="content"/>
                     </div>
-                    <button class="btn btn-outline-primary float-right" type="submit">Place</button>
+                    <button class="btn btn-outline-primary float-right" type="submit">Post</button>
                 </form>
             </div>
         </div>

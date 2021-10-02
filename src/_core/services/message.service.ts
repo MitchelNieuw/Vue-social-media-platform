@@ -12,14 +12,14 @@ class MessageService extends Vue {
 
     public async getMessages(): Promise<AxiosResponse> {
         return await axios.get(
-            'http://127.0.0.1:8000/api/v1/user/messages',
-           await this.config
+            process.env.VUE_APP_API_URL + 'api/v1/user/messages',
+            await this.config
         );
     }
 
     public storeMessage(formData: FormData): Promise<AxiosResponse> {
         return axios.post(
-            'http://127.0.0.1:8000/api/v1/user/messages/store',
+            process.env.VUE_APP_API_URL + 'api/v1/user/messages/store',
             formData,
             this.config
         );
@@ -27,7 +27,7 @@ class MessageService extends Vue {
 
     public deleteMessage(message: any): Promise<AxiosResponse> {
         return axios.delete(
-            'http://127.0.0.1:8000/api/v1/user/messages/' + message.id + '/delete',
+            process.env.VUE_APP_API_URL + 'api/v1/user/messages/' + message.id + '/delete',
             this.config
         );
     }
