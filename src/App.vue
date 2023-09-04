@@ -19,8 +19,7 @@
                         </li>
                         <li v-if="this.$store.getters.isLoggedIn" class="nav-item">
                             <router-link class="nav-link" to="/user/notifications">
-                                Notifications <span class="badge badge-light"
-                                                    v-text="this.$store.state.newNotifications"/>
+                                Notifications <span class="badge badge-light" v-text="this.$store.state.newNotifications"/>
                             </router-link>
                         </li>
                     </ul>

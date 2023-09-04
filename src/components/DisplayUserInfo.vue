@@ -6,8 +6,7 @@
 				<p class="m-1 h5" v-text="displayUser.name"/>
 				<p class="m-1 text-primary" v-text="'@' + displayUser.tag"/>
 			</div>
-			<div class="mt-3" v-if="displayUser.followerCount !== undefined
-                                    && displayUser.followingCount !== undefined">
+			<div class="mt-3" v-if="displayUser.followerCount !== undefined && displayUser.followingCount !== undefined">
 				<router-link :to="'/user/' + displayUser.tag + '/following'" class="d-inline-block m-0 mr-3" v-text="'Following ' + displayUser.followingCount">
 				</router-link>
 				<router-link :to="'/user/' + displayUser.tag + '/followers'" class="d-inline-block m-0" v-text="'Followers ' + displayUser.followerCount">
@@ -38,8 +37,8 @@
 	</div>
 </template>
 
-<style scoped lang="css">
-@import '~@fortawesome/fontawesome-free/css/all.min.css';
+<style scoped lang="scss">
+	@import '~@fortawesome/fontawesome-free/css/all.min.css';
 </style>
 
 <script lang="ts">
